@@ -223,6 +223,340 @@ DOORS.person={
   heldPainful:"A read of character is the easiest kind to keep and the hardest to test. It rests on your account; the rest is theirs to say."
 };
 
+/* ---------- why something succeeded or failed ---------- */
+function good(S){return S.whatR==="Succeeded"||S.whatR==="Beat expectations"}
+DOORS.thing={
+  title:"Why something succeeded or failed",
+  subject:"this outcome",closing:"This is what your answers support. It is not a ruling on what happened.",
+  who:{q:"Think of one outcome. Not a category. What was it?",sub:"That it happened is not in question here. Why it happened is.",
+    options:[["Launch","A product or a launch"],["Project","A project or initiative"],["Deal","A deal, a pitch or a negotiation"],["Hire","A hire or a team"],["Company","A company or an investment"]],
+    foot:"This tests an explanation of one outcome. It works from what you report, so it is only as good as what you saw."},
+  what:{q:"How did it turn out?",
+    options:[["Failed","It failed"],["Fell short","It fell short of what was expected"],["Succeeded","It succeeded"],["Beat expectations","It did far better than expected"]]},
+  count:{q:"How many outcomes like it have you seen up close?",thin:"First of its kind",thinText:"it is the only case of its kind you have seen",
+    options:[["First of its kind","This is the first"],["2–3 like it","Two or three"],["Many like it","Many"],["Mostly secondhand","I've mostly read or heard about them"]],
+    replies:{"First of its kind":"One case can't separate skill from circumstance. Keep that in mind when you rate your confidence.","Mostly secondhand":"Then most of what you have is someone else's account. Keep it separate from what you have seen."}},
+  readQ:"And your read? What explains it?",
+  M:{
+    quality:{s:"The thing itself: it was that good, or that flawed.",n:"The thing itself",in:1,
+          pred:"People who dealt with it directly reacted the same way, early and late."},
+    exec:{s:"Execution: how it was carried out.",n:"Execution",in:1,
+          pred:"The same idea has gone differently in other hands. The gap shows in the steps that were under control."},
+    people:{s:"The people: who was involved, or who wasn't.",n:"The people",in:1,
+          pred:"It turned on one or two individuals. Change them and you would expect a different result."},
+    timing:{s:"Timing: the moment was right, or wrong.",n:"Timing",in:0,
+          pred:"Similar efforts at the same time went the same way. Earlier or later ones went differently.",cond:"Similar efforts at the same time went the same way"},
+    reach:{s:"Reach: who it got in front of, and how.",n:"Who it reached",in:0,
+          pred:"The response among those it reached was one thing. How many it reached was another, and that decided it."},
+    luck:{s:"Chance: it could easily have gone the other way.",n:"Chance",in:0,
+          pred:"The margin was narrow. Run it again and you would not bet on the same result.",cond:"It was close enough to go either way"}
+  },
+  IDS:["quality","exec","people","timing","reach","luck"],
+  story:{kicker:"Where you put the cause",
+    all:function(n,thr){return n===1?"The explanation you rate"+thr+" puts the cause in what was done, not in the circumstances.":"The "+NUM[n]+" explanations you rate"+thr+" all put the cause in what was done, not in the circumstances."},
+    none:function(n,thr){return n===1?"The explanation you rate"+thr+" puts the cause in the circumstances.":"None of the explanations you rate"+thr+" puts the cause in what was done."},
+    mixed:function(n,k,thr){return "Of the "+NUM[n]+" explanations you rate"+thr+", "+NUM[k]+(k===1?" puts":" put")+" the cause in what was done."},
+    qAll:"What tells you it was what was done, and not the circumstances?",qNone:"What tells you that?",qMixed:"What tells you which it is?",
+    optsIn:[["others","Similar efforts at the time went differently"],["saw","I watched it happen, step by step"],["again","It has gone this way before, with the same people"],["none","Nothing specific. It's my reading."]],
+    optsOut:[["peers","Similar efforts at the time went the same way"],["narrow","It was close; small things decided it"],["saw","I watched it happen, step by step"],["none","Nothing specific. It's my reading."]],
+    replies:{others:"That would be real evidence. We'll come back to whether you know it.",peers:"That would be real evidence. We'll come back to whether you know it.",
+      narrow:"That would be real evidence. We'll come back to whether you know it.",again:"A record is evidence. It can be checked.",
+      saw:"Being close to it is evidence of what happened. It is weaker evidence of why.",none:"Then where you put the cause is an assumption. It may still be right."},
+    checks:{others:{q:"t1",ok:"diff",say:"Earlier you said similar efforts went differently.",note:"You said similar efforts went differently, then didn't confirm it."},
+            peers:{q:"t1",ok:"same",say:"Earlier you said similar efforts went the same way.",note:"You said similar efforts went the same way, then didn't confirm it."},
+            narrow:{q:"t2",ok:"narrow",say:"Earlier you said it was close.",note:"You said it was close, then didn't confirm it."}}},
+  CHAIN:{one:"This outcome had one main cause.",ctrl:"The cause was in what was done, not in the circumstances.",repeat:"Done the same way again, it would turn out the same.",
+    saw:"I saw enough of it to know what happened.",hind:"I would have explained it this way before I knew the result.",enough:"I know enough to tell these explanations apart.",
+    moment:"The moment differed from other moments in a way that mattered.",margin:"Small things could have tipped it.",channel:"Who it reached was decided separately from how good it was."},
+  CHAIN_SHOWN:["one","ctrl","repeat","saw","hind","enough"],
+  NEEDS:{quality:["ctrl","repeat"],exec:["ctrl","repeat"],people:["ctrl"],timing:[],reach:[],luck:[]},
+  DENIES:{timing:"ctrl",luck:"repeat"},
+  FALLBACK:{timing:"moment",luck:"margin",reach:"channel"},
+  noNeeds:"It rests on something that isn't on this list.",
+  find:{ask:"By asking one person who would know",watch:"By checking a record or a number",
+    askedYes:"Then you have their account. Keep what they said separate from what you concluded.",
+    unWatch:"It could be checked. Until it is, this part is a guess.",tagWatch:"Unchecked"},
+  carry:{options:[["result","The result itself"],["inside","What I saw from the inside"],["pattern","I've seen this pattern before"],["said","What the people involved say"],["feel","A feeling"]],
+    replies:{result:"The result is the thing being explained. It can't also be the evidence: every explanation here ends in the same result.",
+      inside:"Being close shows you what happened. It also hides what you weren't placed to see, such as how similar efforts went.",
+      pattern:"A pattern is a starting assumption. It tells you what usually explains outcomes like this, not what explained this one.",
+      said:"People involved explain outcomes in ways that are kind to themselves. So do the people who weren't. Treat it as an account."},
+    checks:{}},
+  QS:["t1","t2","t3","t4"],
+  Q:{
+    t1:{q:"How did similar efforts go around the same time?",col:"Others then",
+        o:[["same","Much the same way"],["diff","Differently"],["dk","I don't know"]],
+        fit:{same:{timing:1,quality:-1,exec:-1,people:-1},diff:{timing:-1,quality:1,exec:1,people:1}},
+        fact:{same:"similar efforts at the time went the same way",diff:"similar efforts at the time went differently"},
+        say:{same:"Then the moment explains a good deal. Timing fits. Explanations particular to this one fit less well.",
+             diff:"Then the moment doesn't explain it. Timing fits less well. Something particular to this one fits better.",
+             dk:"Unknown. Without a comparison it is hard to tell this case from its moment."},
+        unk:"how similar efforts went at the time"},
+    t2:{q:"How close was it?",col:"Margin",
+        o:[["narrow","Close. It could have gone either way"],["wide","Not close"],["dk","I don't know"]],
+        fit:{narrow:{luck:1,quality:-1},wide:{luck:-1}},
+        fact:{narrow:"it was close",wide:"it was not close"},
+        say:{narrow:"Then small things could have decided it. Chance fits. A decisive difference in the thing itself fits less well.",
+             wide:"Then it was not a coin flip. Chance fits less well.",
+             dk:"Unknown. This is the fact that separates chance from the rest."},
+        unk:"how close it was"},
+    t3:{q:"Among the people it actually reached, how was the response?",col:"Response",
+        o:[["strong","Strong"],["weak","Weak"],["dk","I don't know"]],
+        fit:function(S){return good(S)?{strong:{quality:1,reach:-1},weak:{reach:1,quality:-1}}:{strong:{reach:1,quality:-1},weak:{quality:1,reach:-1}}},
+        fact:{strong:"the people it reached responded strongly",weak:"the people it reached responded weakly"},
+        say:{strong:function(S){return good(S)?"Then it held up with the people who met it. That fits the thing itself.":"Then the people who met it responded, and it still fell short. That fits who it reached. A flaw in the thing itself fits less well."},
+             weak:function(S){return good(S)?"Then it did well without winning over the people it reached. Reach fits better than the thing itself.":"Then it did not land even with those who met it. That fits the thing itself. Reach fits less well."},
+             dk:"Unknown. This is the fact that separates the thing from who saw it."},
+        unk:"how the people it reached responded"},
+    t4:{q:"Has the same approach, with the same people, worked before?",col:"Track record",
+        o:[["yes","Yes"],["no","No, or it hasn't been tried"],["dk","I don't know"]],
+        fit:function(S){return good(S)?{yes:{exec:1,people:1,luck:-1},no:{}}:{yes:{exec:-1,people:-1,timing:1,luck:1},no:{}}},
+        fact:{yes:"the same approach and people have worked before",no:"there is no earlier record"},
+        say:{yes:function(S){return good(S)?"Then it is a repeat. Execution and the people fit. Chance fits less well, since luck rarely repeats.":"Then the same people and approach have worked before. They fit less well as the cause this time. Something outside them fits better."},
+             no:"Then there is no record to compare with. This answer separates nothing.",
+             dk:"Unknown. A track record would have separated the people from the moment."},
+        unk:"whether the same approach has worked before"}
+  },
+  COND_MET:{timing:["t1","same"],luck:["t2","narrow"]},
+  wordsVsActs:function(){return false},
+  oppose:{read:"exec",q:"Build the strongest case that the same execution would have ended differently in other circumstances.",
+    options:[["peers","Similar efforts at the time went the same way, however they were run."],["close","It was close enough that small things decided it."],
+             ["before","The same approach has worked before."],["reach","The people it reached responded differently from the overall result."]],
+    clash:{v:"peers",q:"t1",bad:"diff",
+      sayBad:"A few answers ago you said similar efforts went differently. The case can't stand on this.",
+      sayDk:"A few answers ago you didn't know how similar efforts went. The case now rests on it."},
+    defendPre:"“It came down to execution. The circumstances were the same for everyone.”",
+    defend:[["a","I haven't checked that the circumstances were the same for everyone."],["b","I'm judging the execution by the result."]],
+    built:"You could build a case that circumstances explain it, from things you say are true."},
+  forecast:{q:"If something like it were tried again the same way, how would it go?",
+    options:[["It goes the same way","The same way"],["It goes the other way","The other way"],["It is too close to call","Too close to call"],["It never gets tried again","It won't be tried again"]]},
+  premise:"You came in with an outcome. Nothing here disputes what happened. The question was why.",
+  heldPainful:""
+};
+
+/* ---------- why people believe something you don't ---------- */
+DOORS.belief={
+  title:"Why people believe something you don't",
+  subject:"these people",closing:"This is what your answers support. It is not a ruling on who is right.",
+  who:{q:"Think of one belief, held by people you could name. Who holds it?",sub:"That they believe it is not in question here. Why they do is.",
+    options:[["Someone close","Someone close to me"],["Colleagues","People I work with"],["A group","A group I'm not part of"],["Most people","Most people, as far as I can tell"],["Experts","People who are supposed to know"]],
+    foot:"This tests your explanation of why they believe it. It doesn't rule on who is right."},
+  what:{q:"What kind of belief is it?",
+    options:[["About what is true","About what is true"],["About what works","About what works"],["About what is right","About what is right"],["About a person or group","About a person or a group"],["About the future","About what will happen"]]},
+  count:{q:"How many of them have you talked to about it?",thin:"None directly",thinText:"you have talked to none of them about it",
+    options:[["None directly","None"],["1–2 people","One or two"],["Several","Several"],["Many","Many"]],
+    replies:{"None directly":"Then your explanation is of people you haven't heard from. Keep that in mind when you rate your confidence.","1–2 people":"One or two is a thin sample of a group. Keep that in mind."}},
+  readQ:"And your read? Why do they believe it?",
+  M:{
+    careless:{s:"They haven't thought it through.",n:"Not thought through",in:1,painful:1,
+          pred:"They can't state the case against their view. They haven't met the strongest version of yours.",cond:"They can't state the case against their own view"},
+    stakes:{s:"It suits them to believe it.",n:"It suits them",in:1,painful:1,
+          pred:"Believing otherwise would cost them standing, income or belonging.",cond:"Changing their mind would cost them something"},
+    facts:{s:"They have information I don't.",n:"Different information",in:0,
+          pred:"They can point to something specific you hadn't heard, and it changes what a reasonable person would conclude."},
+    sources:{s:"They trust different sources.",n:"Different sources",in:0,
+          pred:"Their case rests on who said it. So does yours. Neither of you has checked firsthand."},
+    values:{s:"They weigh the same facts differently.",n:"Different values",in:0,
+          pred:"They accept your facts and still disagree. The dispute is about what matters more.",cond:"They accept my facts and still disagree"},
+    wrong:{s:"They're right, and I'm the one who's wrong.",n:"I'm wrong",in:0,note:"“I'm wrong” is a possibility here, not a verdict.",
+          pred:"The best-informed of them hold it. Your own reasons turn out to be secondhand."}
+  },
+  IDS:["careless","stakes","facts","sources","values","wrong"],
+  story:{kicker:"Where you put the cause",
+    all:function(n,thr){return n===1?"The explanation you rate"+thr+" puts the cause in a failing of theirs.":"Both explanations you rate"+thr+" put the cause in a failing of theirs."},
+    none:function(n,thr){return n===1?"The explanation you rate"+thr+" doesn't put the cause in a failing of theirs.":"None of the explanations you rate"+thr+" puts the cause in a failing of theirs."},
+    mixed:function(n,k,thr){return "Of the "+NUM[n]+" explanations you rate"+thr+", "+NUM[k]+(k===1?" puts":" put")+" the cause in a failing of theirs."},
+    qAll:"What tells you the cause is a failing of theirs?",qNone:"What tells you that?",qMixed:"What tells you which it is?",
+    optsIn:[["cant","They can't state the case against their view"],["gain","I can see what they gain from it"],["heard","I've heard their reasons, and they don't hold"],["none","Nothing specific. It's my reading."]],
+    optsOut:[["named","They've named things I hadn't considered"],["accept","They accept my facts and still disagree"],["heard2","I've heard their reasons, and they are reasons"],["none","Nothing specific. It's my reading."]],
+    replies:{cant:"That would be real evidence. We'll come back to whether you know it.",accept:"That would be real evidence. We'll come back to whether you know it.",
+      named:"Then you have something specific. That is evidence.",gain:"Seeing a motive shows the belief is convenient. It doesn't show the belief came from the motive.",
+      heard:"Then you have their account, and your judgment of it.",heard2:"Then you have their account of it.",
+      none:"Then where you put the cause is an assumption. It may still be right."},
+    checks:{cant:{q:"b2",ok:"no",say:"Earlier you said they can't state the case against their view.",note:"You said they can't state the case against their view, then didn't confirm it."},
+            accept:{q:"b3",ok:"accept",say:"Earlier you said they accept your facts and still disagree.",note:"You said they accept your facts, then didn't confirm it."}}},
+  CHAIN:{same:"They believe what I think they believe.",facts:"We are looking at the same facts.",best:"I've met the strongest version of their view.",
+    free:"My own view isn't shaped by what suits me.",check:"I've checked my side firsthand.",enough:"I know enough to tell these explanations apart.",
+    gap:"There is something specific they know that I don't.",second:"Neither of us has checked it firsthand.",own:"My own reasons would not survive the scrutiny I give theirs."},
+  CHAIN_SHOWN:["same","facts","best","free","check","enough"],
+  NEEDS:{careless:["same","best"],stakes:["same","best"],values:["same","facts"],facts:[],sources:[],wrong:[]},
+  DENIES:{facts:"facts",sources:"check"},
+  FALLBACK:{facts:"gap",sources:"second",wrong:"own"},
+  noNeeds:"It rests on something that isn't on this list.",
+  find:{ask:"By asking one of them a question",watch:"By reading what they read",
+    unWatch:"It would take some reading. Until then this part is a guess.",tagWatch:"Unread"},
+  carry:{options:[["absurd","The belief is plainly wrong"],["talk","Conversations I've had with them"],["who","Who holds it"],["evidence","Evidence I've checked myself"],["feel","A feeling"]],
+    replies:{absurd:"How wrong it looks to you is evidence about the belief. It isn't evidence about why they hold it.",
+      talk:"That is direct evidence about the people you talked to. Whether it holds for the rest is a separate question.",
+      who:"Who holds a belief tells you about its company. Every explanation here is compatible with the same people holding it.",
+      evidence:"That bears on who is right. Why they believe it is a different question, and the one you came in with."},
+    checks:{}},
+  QS:["b1","b2","b3","b4"],
+  Q:{
+    b1:{q:"Could you state their strongest argument so that they'd say you got it right?",col:"Their case",
+        o:[["yes","Yes"],["no","No"],["dk","I'm not sure"]],
+        fit:{yes:{},no:{careless:-1,facts:1,wrong:1}},
+        fact:{yes:"you can state their strongest argument",no:"you can't yet state their strongest argument"},
+        say:{yes:"Then you know the view you are explaining. This answer separates nothing by itself. It makes the others worth more.",
+             no:"Then you are explaining a view you can't yet state. “Not thought through” fits less well when the thinking is what you haven't seen.",
+             dk:"Unknown. And this one is about you, not them."},
+        unk:"whether you can state their strongest argument"},
+    b2:{q:"Can they state the case against their own view?",col:"Your case",
+        o:[["yes","Yes, fairly"],["no","No"],["dk","I don't know"]],
+        fit:{yes:{careless:-1,values:1},no:{careless:1}},
+        fact:{yes:"they can state the case against their own view",no:"they can't state the case against their own view"},
+        say:{yes:"Then they have met the other side and kept their view. “Not thought through” fits less well.",
+             no:"That fits not having thought it through. It also fits never having been shown your side at its best.",
+             dk:"Unknown. This is the fact that would show whether they have thought it through."},
+        unk:"whether they can state the case against their view"},
+    b3:{q:"When you give them your facts, what happens?",col:"Your facts",
+        o:[["accept","They accept them and still disagree"],["dispute","They dispute the facts"],["dk","I haven't tried"]],
+        fit:{accept:{values:1,facts:-1,sources:-1},dispute:{facts:1,sources:1,values:-1}},
+        fact:{accept:"they accept your facts and still disagree",dispute:"they dispute your facts"},
+        say:{accept:"Then the facts aren't the disagreement. Different values fit. Different information fits less well.",
+             dispute:"Then the disagreement is about what is true. Different information and different sources both fit. Different values fit less well.",
+             dk:"Unknown, because untested. This is the cheapest fact on the list to get."},
+        unk:"what happens when you give them your facts"},
+    b4:{q:"Would changing their mind cost them anything?",col:"Cost to them",
+        o:[["yes","Yes: standing, income or belonging"],["no","Not that I can see"],["dk","I don't know"]],
+        fit:{yes:{stakes:1},no:{stakes:-1}},
+        fact:{yes:"changing their mind would cost them",no:"changing their mind would cost them nothing you can see"},
+        say:{yes:"That fits “it suits them.” It shows the belief is convenient, not where it came from. Yours may be convenient too.",
+             no:"Then interest doesn't explain it. “It suits them” fits less well.",
+             dk:"Unknown. This is the fact that bears on motive."},
+        unk:"whether changing their mind would cost them"}
+  },
+  COND_MET:{careless:["b2","no"],stakes:["b4","yes"],values:["b3","accept"]},
+  wordsVsActs:function(){return false},
+  oppose:{read:"careless",q:"Build the strongest case that a careful, informed person could hold their view.",
+    options:[["know","They know something relevant that I don't."],["weigh","They weigh a real cost that I discount."],
+             ["source","Their sources have been right before when mine were wrong."],["thought","They can state my side fairly and still disagree."]],
+    clash:{v:"thought",q:"b2",bad:"no",
+      sayBad:"A few answers ago you said they can't state the case against their own view. The case can't stand on this.",
+      sayDk:"A few answers ago you didn't know whether they could state the case against their view. The case now rests on it."},
+    defendPre:"“They haven't thought it through. Anyone who had would see it.”",
+    defend:[["a","I'm treating the disagreement itself as the evidence."],["b","I've heard the loudest of them, not the best."]],
+    built:"You could build a case that a careful person could hold their view, from things you say are true."},
+  forecast:{q:"If you put your best argument to the most thoughtful of them, what happens?",
+    options:[["They change their mind","They change their mind"],["They concede the facts and keep the view","They concede the facts and keep the view"],["They tell me something I didn't know","They tell me something I didn't know"],["Nothing moves on either side","Nothing moves"]]},
+  premise:"You came in with a disagreement. Nothing here settles who is right. The question was why they believe it.",
+  heldPainful:"A read that the other side is careless or self-interested is the easiest to hold and the hardest to test. It rests on your account of them."
+};
+
+/* ---------- why I keep making the same mistake ---------- */
+DOORS.self={
+  title:"Why I keep making the same mistake",
+  subject:"you",closing:"This is what your answers support. It is not a verdict on you.",
+  who:{q:"Think of one thing you keep doing. Not a trait. Where does it happen?",sub:"That it happens is not in question here. Why it happens is.",
+    options:[["At work","At work"],["With money","With money"],["With people","With people close to me"],["With my health","With my health or habits"],["With decisions","When I have to decide something"]],
+    foot:"This tests an explanation of a pattern. It isn't a judgment of you. If what you keep doing is hurting you or someone else, talk to someone. "+HELP},
+  what:{q:"What happens?",
+    options:[["I say yes when I mean no","I say yes when I mean no"],["I put it off","I put it off until it's late"],["I react before I think","I react before I think"],["I avoid the conversation","I avoid the conversation"],["I repeat the same choice","I make the same choice, and regret it"]]},
+  count:{q:"How many times, roughly?",thin:"2–3 times",thinText:"it has happened two or three times",
+    options:[["2–3 times","Two or three"],["Many times","Many"],["Most times it comes up","Most times the situation comes up"],["Uncounted","I haven't counted"]],
+    replies:{"2–3 times":"Two or three is close to coincidence. Keep that in mind when you rate your confidence.","Uncounted":"Then the number isn't what you are going on. We'll find what is."}},
+  readQ:"And your read? Why do you keep doing it?",
+  M:{
+    flaw:{s:"It's a flaw in me.",n:"A flaw in me",in:1,painful:1,
+          pred:"It shows up everywhere, in every setting, whatever else is going on."},
+    notice:{s:"I don't notice until it's too late.",n:"Noticing too late",in:0,
+          pred:"In the moment it feels normal. You only see it afterwards.",cond:"I only see it afterwards"},
+    pays:{s:"It gets me something I haven't admitted.",n:"It pays",in:0,
+          pred:"Something gets easier each time: a conflict avoided, a feeling put off.",cond:"I feel relief straight after"},
+    setup:{s:"The situation sets me up for it.",n:"The situation",in:0,
+          pred:"It happens in particular settings and not others. Other people in the same spot do it too.",cond:"It only happens in particular settings"},
+    skill:{s:"I don't know how to do the other thing.",n:"A missing skill",in:0,
+          pred:"When you try the alternative, it goes badly or you don't know where to start.",cond:"When I try the alternative, I don't know how"},
+    value:{s:"By my own values, it isn't a mistake.",n:"Not a mistake",in:0,note:"“Not a mistake” would make the regret the thing to explain.",
+          pred:"You would choose it again with full information. The regret comes from someone else's standard."}
+  },
+  IDS:["flaw","notice","pays","setup","skill","value"],
+  story:{kicker:"Where you put the cause",
+    all:function(n,thr){return "The explanation you rate"+thr+" puts the cause in what you are, not in what happens around you."},
+    none:function(n,thr){return n===1?"The explanation you rate"+thr+" doesn't put the cause in what you are.":"None of the explanations you rate"+thr+" puts the cause in what you are."},
+    mixed:function(n,k,thr){return "Of the "+NUM[n]+" explanations you rate"+thr+", one puts the cause in what you are."},
+    qAll:"What tells you it is you, and not the situation?",qNone:"What tells you that?",qMixed:"What tells you which it is?",
+    optsIn:[["every","It happens everywhere, whatever is going on"],["others","Other people in the same spot don't do it"],["long","I've always been like this"],["none","Nothing specific. It's my reading."]],
+    optsOut:[["where","It happens in some settings and not others"],["common","Other people in the same spot do it too"],["started","It started at a point I could name"],["none","Nothing specific. It's my reading."]],
+    replies:{every:"That would be real evidence. We'll come back to whether you know it.",where:"That would be real evidence. We'll come back to whether you know it.",
+      others:"That would be evidence, if you have seen how they manage and haven't assumed it.",common:"That would be evidence, if you have seen it and haven't assumed it.",
+      long:"“Always” is a long time to have checked. It is usually a summary of the times you remember.",started:"A date is something that can be checked.",
+      none:"Then where you put the cause is an assumption. It may still be right."},
+    checks:{every:{q:"s1",ok:"all",say:"Earlier you said it happens everywhere.",note:"You said it happens everywhere, then didn't confirm it."},
+            where:{q:"s1",ok:"some",say:"Earlier you said it happens in some settings and not others.",note:"You said it follows the setting, then didn't confirm it."}}},
+  CHAIN:{pattern:"It's a pattern, not a few bad days.",choice:"I'm choosing it, each time.",same:"It's the same mistake each time, not different ones that look alike.",
+    mistake:"It is a mistake, by my own standards.",could:"I could do otherwise if I tried harder.",enough:"I know enough to tell these explanations apart.",
+    how:"There is a specific thing I don't know how to do.",std:"The standard I'm failing isn't mine."},
+  CHAIN_SHOWN:["pattern","choice","same","mistake","could","enough"],
+  NEEDS:{flaw:["pattern","same"],notice:["pattern"],pays:["pattern","choice"],setup:["pattern"],skill:[],value:[]},
+  DENIES:{notice:"choice",skill:"could",value:"mistake"},
+  FALLBACK:{skill:"how",value:"std"},
+  noNeeds:"It rests on something that isn't on this list.",
+  find:{ask:"By trying the other thing once, on purpose",watch:"By keeping a note for a few weeks",hard:"I could try, but I wouldn't trust what I saw",
+    hardReply:"Then one try is not a clean test here. That is worth knowing in itself.",
+    askedYes:"Then you have one observation of your own. Keep what happened separate from what you concluded.",
+    unAsk:"The assumption your read leans on most is one deliberate try away. It is still untried.",
+    unWatch:"It would take a few weeks of notes. Until then this part is a guess.",
+    tagAsk:"One try away, untried",tagWatch:"Unrecorded",tagHard:"A try wouldn't settle it",endAsk:"Still open: one deliberate try."},
+  carry:{options:[["count","How often it happens"],["regret","How bad I feel afterwards"],["told","What other people have told me"],["long","How long it's been going on"],["feel","A feeling"]],
+    replies:{count:"Frequency shows it is a pattern. It doesn't show why: every explanation here is compatible with it happening often.",
+      regret:"Regret tells you it matters to you. It isn't evidence for any one explanation, and it tends to point at character first.",
+      told:"Other people see what you do, not why. Their account is evidence of the pattern more than of its cause.",
+      long:"Duration fits a flaw. It also fits a situation that hasn't changed, and a payoff that still pays."},
+    checks:{}},
+  QS:["s1","s2","s3","s4"],
+  Q:{
+    s1:{q:"Does it happen everywhere, or in particular settings?",col:"Where",
+        o:[["all","Everywhere"],["some","In particular settings"],["dk","I don't know"]],
+        fit:{all:{flaw:1,setup:-1},some:{setup:1,flaw:-1}},
+        fact:{all:"it happens everywhere",some:"it happens in particular settings"},
+        say:{all:"That fits something you carry with you. The situation fits less well.",
+             some:"Then it follows the setting, not you. The situation fits. A flaw in you fits less well: a flaw would travel.",
+             dk:"Unknown. This is the fact that separates you from your circumstances."},
+        unk:"whether it happens everywhere"},
+    s2:{q:"When do you realize you're doing it?",col:"When you notice",
+        o:[["after","Only afterwards"],["during","While I'm doing it"],["dk","I don't know"]],
+        fit:{after:{notice:1},during:{notice:-1,pays:1,skill:1}},
+        fact:{after:"you only see it afterwards",during:"you see it while you're doing it"},
+        say:{after:"That fits noticing too late. If you can't see it in the moment, trying harder isn't the missing piece.",
+             during:"Then noticing isn't the problem. You see it and continue. That fits it paying you something, or not knowing how to do the other thing.",
+             dk:"Unknown. This is the fact that separates not seeing it from not stopping it."},
+        unk:"when you notice it"},
+    s3:{q:"Straight after you do it, before any regret, what do you feel?",col:"Straight after",
+        o:[["relief","Relief"],["nothing","Nothing in particular"],["bad","Bad straight away"],["dk","I don't know"]],
+        fit:{relief:{pays:1},nothing:{pays:-1},bad:{pays:-1,value:-1}},
+        fact:{relief:"you feel relief straight after",nothing:"you feel nothing in particular straight after",bad:"you feel bad straight away"},
+        say:{relief:"That fits it paying you something. The relief is the payment.",
+             nothing:"Then there is no obvious reward. “It pays” fits less well.",
+             bad:"Then it costs you at once. “It pays” fits less well, and so does “not a mistake.”",
+             dk:"Unknown. This is the fact that would show whether it pays."},
+        unk:"what you feel straight after"},
+    s4:{q:"When you've tried to do the other thing, what happened?",col:"The alternative",
+        o:[["worked","It worked, and I still went back"],["failed","It went badly, or I didn't know how"],["dk","I haven't really tried"]],
+        fit:{worked:{skill:-1,pays:1},failed:{skill:1}},
+        fact:{worked:"the alternative worked and you went back",failed:"the alternative went badly, or you didn't know how"},
+        say:{worked:"Then you can do the other thing. A missing skill fits less well. Something is drawing you back.",
+             failed:"That fits a missing skill. It is the most fixable explanation on the list.",
+             dk:"Unknown, because untried. This is the cheapest fact on the list to get."},
+        unk:"what happens when you try the alternative"}
+  },
+  COND_MET:{notice:["s2","after"],pays:["s3","relief"],setup:["s1","some"],skill:["s4","failed"]},
+  wordsVsActs:function(){return false},
+  oppose:{read:"flaw",q:"Build the strongest case that a sensible person in your position would do the same.",
+    options:[["setting","It only happens in settings that would trip most people."],["reward","It gets me something real, even if I don't like admitting it."],
+             ["never","Nobody ever showed me how to do the other thing."],["notsee","I can't stop what I don't see until afterwards."]],
+    clash:{v:"setting",q:"s1",bad:"all",
+      sayBad:"A few answers ago you said it happens everywhere. The case can't stand on the setting.",
+      sayDk:"A few answers ago you didn't know whether it happens everywhere. The case now rests on it."},
+    defendPre:"“It's a flaw in me. Other people manage.”",
+    defend:[["a","I haven't checked that other people do manage."],["b","I'm judging myself on the times it happened, not the times it didn't."]],
+    built:"You could build a case that it isn't a flaw, from things you say are true."},
+  forecast:{q:"The next time the situation comes up, what happens?",
+    options:[["I do it again","I do it again"],["I notice sooner, and still do it","I notice sooner, and still do it"],["I do the other thing","I do the other thing"],["It doesn't come up","It doesn't come up"]]},
+  premise:"You came in with something you keep doing. Nothing here disputes that it happens. The question was why.",
+  heldPainful:"“A flaw in me” asks the least of the evidence and the most of you. It rests on your own account, which is usually harder on you than a stranger's would be."
+};
+
 var D, M, IDS, CHAIN, QS, Q, COND_MET, S;
 function useDoor(id){D=DOORS[id];M=D.M;IDS=D.IDS;CHAIN=D.CHAIN;QS=D.QS;Q=D.Q;COND_MET=D.COND_MET;doorLabel.textContent=D.title}
 function fresh(){S={know:{},base:{},after:{},marked:[],notes:[]};recap.textContent="";restartBtn.hidden=true}
@@ -239,7 +573,9 @@ function pct(v){return (Math.max(1,Math.min(5,v))-1)/4*100}
 function setProg(p){prog.style.width=(p*100)+"%"}
 function show(html){stage.classList.remove("in");stage.innerHTML=html;void stage.offsetWidth;stage.classList.add("in");window.scrollTo(0,0)}
 function setRecap(){var a=[];if(S.whoR)a.push(S.whoR);if(S.whatR)a.push(S.whatR);if(S.countR)a.push(S.countR);recap.textContent=a.join("  ·  ")}
-function fitOf(k,id){var a=S.know[k];if(!a||a==="dk")return null;return (Q[k].fit[a]||{})[id]||0}
+function F(k){var f=Q[k].fit;return typeof f==="function"?f(S):f}
+function fitOf(k,id){var a=S.know[k];if(!a||a==="dk")return null;return (F(k)[a]||{})[id]||0}
+function fnd(k,d){return (D.find&&D.find[k])||d}
 function opts(pairs){return pairs.map(function(p){return {v:p[0],l:p[1]}})}
 function order(){return (S.read?[S.read]:[]).concat(IDS.filter(function(id){return id!==S.read}))}
 
@@ -302,7 +638,7 @@ function ask(o){
   };
 }
 
-/* a screen of five-step scales; pre holds starting values, was shows what they were */
+/* a screen of five-step scales; start holds starting values, was shows what they were */
 function rateScreen(o){
   setProg(o.p);
   var h=head(o)+'<div class="ends"><span>Impossible</span><span>Certain</span></div><div class="rate">';
@@ -324,7 +660,7 @@ function rateScreen(o){
     function set(v){got[id]=v;bs.forEach(function(x){x.setAttribute("aria-pressed",+x.getAttribute("data-v")===v?"true":"false")});label(row,id);
       go.disabled=Object.keys(got).length<o.ids.length;}
     bs.forEach(function(b){b.addEventListener("click",function(){set(+b.getAttribute("data-v"))})});
-    if(o.pre&&o.pre[id])set(o.pre[id]);
+    if(o.start&&o.start[id])set(o.start[id]);
   });
   go.disabled=Object.keys(got).length<o.ids.length;
   go.addEventListener("click",function(){keyHandler=null;o.next(got)});
@@ -334,8 +670,8 @@ function rateScreen(o){
 /* ---------- screens ---------- */
 function doors(){
   doorLabel.textContent="";
-  ask({p:0,q:"What do you have a theory about?",sub:"Two directions are open so far.",
-    options:[{v:"person",l:DOORS.person.title},{v:"rel",l:DOORS.rel.title}],
+  ask({p:0,q:"What do you have a theory about?",sub:"Pick a direction.",
+    options:["person","rel","thing","belief","self"].map(function(k){return {v:k,l:DOORS[k].title}}),
     next:function(v){useDoor(v);who()}});
 }
 function who(){
@@ -430,10 +766,10 @@ function chainBack(){
 }
 function findable(){
   ask({p:.44,kicker:"Assumptions",pre:"<strong>"+esc(CHAIN[S.work])+"</strong>",q:"Could you find that out?",
-    options:[{v:"ask",l:"By asking them one question"},{v:"watch",l:"By watching for a few weeks"},{v:"hard",l:"I could ask, but I wouldn't get a straight answer"},{v:"no",l:"It can't be known"}],
+    options:[{v:"ask",l:fnd("ask","By asking them one question")},{v:"watch",l:fnd("watch","By watching for a few weeks")},{v:"hard",l:fnd("hard","I could ask, but I wouldn't get a straight answer")},{v:"no",l:"It can't be known"}],
     respond:function(v){
       if(v==="no")return "<p>Then something unknowable is doing the most work. Your confidence should carry that.</p>";
-      if(v==="hard")return "<p>Then asking is not a cheap test here. That is worth knowing in itself.</p>";
+      if(v==="hard")return "<p>"+fnd("hardReply","Then asking is not a cheap test here. That is worth knowing in itself.")+"</p>";
       return null;},
     next:function(v){S.findable=v;if(v==="no"||v==="hard"){S.asked="na";carry()}else asked()}});
 }
@@ -441,9 +777,9 @@ function asked(){
   ask({p:.48,kicker:"Assumptions",q:"Have you?",
     options:[{v:"yes",l:"Yes"},{v:"no",l:"No"},{v:"half",l:"Not directly"}],
     respond:function(v){
-      if(v==="yes")return D.wordsVsActs(S)?"<p>Then you have their account. Whether it matches what they do is the thing you came in with.</p>":"<p>Then you have their answer. Keep what they said separate from what you concluded.</p>";
-      if(S.findable==="ask")return "<p>The assumption your read leans on most is one question away. It is still unasked. That is usually about the answer, not the question.</p>";
-      return "<p>It would take a few weeks to see. Until then this part is a guess. Watching is slower than asking and easier to misread.</p>";},
+      if(v==="yes")return D.wordsVsActs(S)?"<p>Then you have their account. Whether it matches what they do is the thing you came in with.</p>":"<p>"+fnd("askedYes","Then you have their answer. Keep what they said separate from what you concluded.")+"</p>";
+      if(S.findable==="ask")return "<p>"+fnd("unAsk","The assumption your read leans on most is one question away. It is still unasked. That is usually about the answer, not the question.")+"</p>";
+      return "<p>"+fnd("unWatch","It would take a few weeks to see. Until then this part is a guess. Watching is slower than asking and easier to misread.")+"</p>";},
     next:function(v){S.asked=v;carry()}});
 }
 
@@ -460,10 +796,10 @@ function predict(){
   /* only offer conditions that would count against the read */
   var ops=IDS.filter(function(id){
     if(id===S.read||!COND_MET[id])return false;
-    var c=COND_MET[id];return ((Q[c[0]].fit[c[1]]||{})[S.read]||0)<=0;
+    var c=COND_MET[id];return ((F(c[0])[c[1]]||{})[S.read]||0)<=0;
   }).map(function(id){return {v:id,l:M[id].cond}});
   ops.push({v:"none",l:"None of these would move me"});
-  ask({p:.57,kicker:"What each explanation predicts",pre:"If each were true, this is roughly what you would expect to see. These are this tool's assumptions, not facts about this person."+h,
+  ask({p:.57,kicker:"What each explanation predicts",pre:"If each were true, this is roughly what you would expect to see. These are this tool's assumptions, not facts about "+(D.subject||"this person")+"."+h,
     q:"Which of these, if you saw it, would move you off your read?",options:ops,
     respond:function(v){return v==="none"?"<p>Noted. Then nothing on this list could test your read.</p>":null},
     next:function(v){S.cond=v;know(0)}});
@@ -476,12 +812,13 @@ function know(i){
     respond:function(v){
       S.know[key]=v;
       var extra="";
-      var bears=S.read&&Object.keys(q.fit).some(function(a){return q.fit[a][S.read]});
+      var ft=F(key), bears=S.read&&Object.keys(ft).some(function(a){return ft[a][S.read]});
       if(v==="dk"&&bears&&S.conf>=4&&!S.dkSaid){S.dkSaid=1;extra+="<p class=\"small\">You rated your read "+S.confL+" without it.</p>"}
       [D.story.checks[S.storyEv],D.carry.checks[S.carry]].forEach(function(c){
         if(c&&c.q===key&&v!==c.ok){extra+="<p class=\"small\">"+c.say+"</p>";S.notes.push(c.note)}
       });
-      return "<p>"+q.say[v]+"</p>"+extra;},
+      var line=q.say[v];if(typeof line==="function")line=line(S);
+      return "<p>"+line+"</p>"+extra;},
     next:function(){know(i+1)}});
 }
 
@@ -540,13 +877,13 @@ function fitScreen(){
     h+='</tr>';
   });
   h+='</tbody></table></div><div class="legend"><span>● fits</span><span>○ fits less well</span><span>· doesn\'t separate</span><span>? you don\'t know</span></div>'+
-    '<p class="note">These marks are this tool\'s assumptions about what each explanation predicts, applied to what you reported from memory. They are not facts about this person, and more than one explanation can be true.</p>'+contBtn();
+    '<p class="note">These marks are this tool\'s assumptions about what each explanation predicts, applied to what you reported from memory. They are not facts about '+(D.subject||'this person')+', and more than one explanation can be true.</p>'+contBtn();
   show(h);wireGo(rerate);
 }
 function rerate(){
   var ids=order();
   rateScreen({p:.93,kicker:"Second rating",q:"Having seen that, rate all "+NUM[ids.length]+" again.",sub:"Your first ratings are filled in. Change only what you would now change.",
-    ids:ids,pre:S.base,was:S.base,next:function(got){S.after=got;findings()}});
+    ids:ids,start:S.base,was:S.base,next:function(got){S.after=got;findings()}});
 }
 
 function gauge(){
@@ -577,7 +914,7 @@ function findings(){
   var h1,lines=[];
   /* what the audit turned up that a held read should carry */
   var weak=[];
-  if(S.countR===D.count.thin)weak.push("you have seen it once or twice");
+  if(S.countR===D.count.thin)weak.push(D.count.thinText||"you have seen it once or twice");
   if(S.countR==="Mostly secondhand")weak.push("most of it is secondhand");
   if(S.carry==="feel")weak.push("what carries it is a feeling you haven't itemized");
   if(S.asked==="no"||S.asked==="half")weak.push("the assumption it leans on is unchecked");
@@ -610,7 +947,7 @@ function findings(){
     lines.push(tops.length===1?"After seeing what your answers fit, you rate "+names(tops)+" highest.":"After seeing what your answers fit, "+names(tops)+" are level at the top.");
   }
   if(r)lines.push(D.premise);
-  if((kind==="held"||kind==="lower")&&M[r].painful)lines.push(D.heldPainful);
+  if((kind==="held"||kind==="lower")&&M[r].painful&&D.heldPainful)lines.push(D.heldPainful);
   tops.forEach(function(id){if(M[id].note)lines.push(M[id].note)});
   if(S.hard&&S.hard!=="none")lines.push("Hardest rival to dismiss: “"+M[S.hard].n+".” You first rated it "+LEVELS[b[S.hard]]+(a[S.hard]!==b[S.hard]?", then "+LEVELS[a[S.hard]]:"")+".");
   if(S.defend&&S.defend!=="none")lines.push(D.oppose.built);
@@ -628,8 +965,8 @@ function findings(){
   rows+='<div><dt>What fits it, by your account</dt><dd>'+(fits.length?esc(cap(fits.join("; ")))+".":"Nothing you reported separates it from the others.")+'</dd></div>';
   if(r){
     var assume=esc(CHAIN[S.work]);
-    if(S.asked==="no"||S.asked==="half")assume+="<em>"+(S.findable==="ask"?"One question away, unasked":"Unobserved")+"</em>";
-    else if(S.findable==="hard")assume+="<em>Asking wouldn't settle it</em>";
+    if(S.asked==="no"||S.asked==="half")assume+="<em>"+(S.findable==="ask"?fnd("tagAsk","One question away, unasked"):fnd("tagWatch","Unobserved"))+"</em>";
+    else if(S.findable==="hard")assume+="<em>"+fnd("tagHard","Asking wouldn't settle it")+"</em>";
     else if(S.findable==="no")assume+="<em>Unknowable</em>";
     rows+='<div><dt>Assumption carrying it</dt><dd>'+assume+'</dd></div>';
   }
@@ -638,7 +975,7 @@ function findings(){
   show('<div class="kicker">What the session found</div><h1>'+esc(h1)+'</h1>'+
     lines.map(function(l){return '<p class="sub">'+esc(l)+'</p>'}).join("")+
     '<dl class="card">'+rows+'</dl>'+gauge()+
-    '<p class="note">This is what your answers support. It is not what they think.</p>'+contBtn());
+    '<p class="note">'+(D.closing||'This is what your answers support. It is not what they think.')+'</p>'+contBtn());
   animateGauge(stage);
   wireGo(forecast);
 }
@@ -657,7 +994,7 @@ function end(){
   setProg(1);
   var dks=QS.filter(function(k){return S.know[k]==="dk"});
   var h1,sub="";
-  if(S.findable==="ask"&&(S.asked==="no"||S.asked==="half")){h1="Still open: one question, unasked.";sub="It is cheaper than any forecast.";}
+  if(S.findable==="ask"&&(S.asked==="no"||S.asked==="half")){h1=fnd("endAsk","Still open: one question, unasked.");sub="It is cheaper than any forecast.";}
   else if(dks.length){h1="Still open: "+Q[dks[0]].unk+".";}
   else h1="Nothing on this list is still open.";
   var changed=IDS.some(function(id){return S.after[id]!==S.base[id]});
@@ -665,10 +1002,11 @@ function end(){
   if(S.view==="no"&&changed)mismatch='<p class="sub">You say nothing changed. Your ratings did. Worth knowing which one you would act on.</p>';
   if((S.view==="sig"||S.view==="wrong")&&!changed)mismatch='<p class="sub">You say your view changed. Your ratings didn\'t. Worth knowing which one you would act on.</p>';
   show('<div class="kicker">Where this leaves it</div><h1>'+esc(h1)+'</h1>'+(sub?'<p class="sub">'+sub+'</p>':'')+mismatch+
-    (S.forecast?'<p class="sub">Sealed: '+esc(S.forecast.toLowerCase())+'. In the full product this comes back once, when it happens, and asks what you saw.</p>':'')+
+    (S.forecast?'<p class="sub">Sealed: '+esc(/^I /.test(S.forecast)?S.forecast:S.forecast.charAt(0).toLowerCase()+S.forecast.slice(1))+'. In the full product this comes back once, when it happens, and asks what you saw.</p>':'')+
     '<button class="go" type="button">Start again<span>↵</span></button>');
   wireGo(function(){fresh();doors()});
 }
 
+window.addEventListener("hashchange",start);
 start();
 })();
