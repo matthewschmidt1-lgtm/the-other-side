@@ -76,9 +76,11 @@
       rows.forEach(function (r, i) { r.classList.remove("picked"); r.children[0].textContent = current.rows[i][0]; r.children[1].textContent = current.rows[i][1]; });
       reveal.classList.add("wait");
       live.textContent = "Example: " + current.obs + " What explains it?";
-      document.getElementById("cta-note").textContent = b.getAttribute("data-c") === "rel"
-        ? "This is the direction you chose."
-        : "The direction you chose isn't open yet. This one is: why a relationship changed.";
+      var c = b.getAttribute("data-c"), open = c === "rel" || c === "person";
+      document.getElementById("cta-note").textContent = open
+        ? "This opens the direction you chose."
+        : "The direction you chose isn't open yet. Two are: why someone behaves the way they do, and why a relationship changed.";
+      [].forEach.call(document.querySelectorAll(".go-session"), function (l) { l.setAttribute("href", open ? "session/#" + c : "session/"); });
     });
   });
   exs.forEach(function (b, n) {
