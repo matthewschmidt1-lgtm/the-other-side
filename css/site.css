@@ -43,7 +43,8 @@ body::after {
 .top {
   position: fixed; inset: 0 0 auto 0; z-index: 5;
   display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
-  padding: calc(env(safe-area-inset-top, 0px) + 22px) var(--gutter) 0;
+  padding: calc(env(safe-area-inset-top, 0px) + 22px) var(--gutter) 22px;
+  background: linear-gradient(var(--ground) 55%, transparent);
   /* fades out while the ground crosses, when neither ink reads well */
   opacity: max(calc(var(--cross) * 2 - 1), calc(1 - var(--cross) * 2));
 }
@@ -98,7 +99,6 @@ html:not(.js) .begin-link { opacity: 1; visibility: visible; }
 @media (max-width: 560px) { .fits > div { grid-template-columns: 1fr; } }
 
 /* instrument */
-.s-inst { align-content: start; padding-block: 22svh 10svh; }
 .gauge {
   position: sticky; top: calc(env(safe-area-inset-top, 0px) + 58px); z-index: 2;
   background: var(--ground); padding-block: 18px 16px; display: flex; flex-direction: column; gap: 12px;
@@ -132,7 +132,7 @@ html:not(.js) .begin-link { opacity: 1; visibility: visible; }
 @media (max-width: 560px) { .law { grid-template-columns: 1fr; } }
 
 /* the crossing: nothing to read while the ground changes */
-.crossing { height: 170svh; }
+.crossing { height: 125svh; }
 html:not(.js) .crossing { height: 0; }
 
 /* endings */
@@ -171,7 +171,12 @@ dl.mini > div { display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap:
 dl.mini dd { color: var(--ink-2); }
 .principles { display: flex; flex-direction: column; border-top: 1px solid var(--rule); }
 .principles li { font-family: var(--display); font-size: var(--t-lead); padding: 14px 0; border-bottom: 1px solid var(--rule); }
-.s-demo, .s-end, .s-law, .s-name { padding-block: 12svh; }
+.s-demo, .s-inst, .s-law { min-height: 0; padding-block: 13svh; align-content: start; }
+.s-cta { min-height: 86svh; }
+.qs { display: flex; flex-direction: column; border-top: 1px solid var(--rule); counter-reset: q; }
+.qs li { padding: 18px 0 20px; border-bottom: 1px solid var(--rule); display: flex; flex-direction: column; gap: 6px; }
+.qs h3 { font-family: var(--display); font-weight: 400; font-size: clamp(1.3rem, 2vw, 1.65rem); line-height: 1.2; }
+.qs p { color: var(--ink-2); }
 @media (max-width: 560px) { dl.mini > div { grid-template-columns: 1fr; } }
 
 /* ---------- small screens: the mountain goes behind the text ---------- */

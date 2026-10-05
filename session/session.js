@@ -118,7 +118,7 @@ DOORS.rel={
 
 /* ---------- why someone behaves the way they do ---------- */
 DOORS.person={
-  title:"Why someone behaves the way they do",
+  title:"Why someone acts the way they do",
   who:{q:"Think of one person, and one thing they do. Who are they to you?",sub:"That they do it is not in question here. Why they do it is.",
     options:[["Reports to me","Someone who reports to me"],["Peer","A peer or colleague"],["My boss","Someone I report to"],["Friend or family","A friend or family member"],["Acquaintance","Someone I deal with but don't know well"]],
     foot:"This tests a read about why one person does one thing. It can't tell you whether the behavior is acceptable. If it is harming you, the reason matters less than getting support. "+HELP},
@@ -226,7 +226,7 @@ DOORS.person={
 /* ---------- why something succeeded or failed ---------- */
 function good(S){return S.whatR==="Succeeded"||S.whatR==="Beat expectations"}
 DOORS.thing={
-  title:"Why something succeeded or failed",
+  title:"Why something worked or failed",
   subject:"this outcome",closing:"This is what your answers support. It is not a ruling on what happened.",
   who:{q:"Think of one outcome. Not a category. What was it?",sub:"That it happened is not in question here. Why it happened is.",
     options:[["Launch","A product or a launch"],["Project","A project or initiative"],["Deal","A deal, a pitch or a negotiation"],["Hire","A hire or a team"],["Company","A company or an investment"]],
@@ -336,9 +336,9 @@ DOORS.thing={
 
 /* ---------- why people believe something you don't ---------- */
 DOORS.belief={
-  title:"Why people believe something you don't",
+  title:"Something most people get wrong",
   subject:"these people",closing:"This is what your answers support. It is not a ruling on who is right.",
-  who:{q:"Think of one belief, held by people you could name. Who holds it?",sub:"That they believe it is not in question here. Why they do is.",
+  who:{q:"Think of one thing you're sure most people have wrong. Who believes it?",sub:"That they believe it is not in question here. Why they do is.",
     options:[["Someone close","Someone close to me"],["Colleagues","People I work with"],["A group","A group I'm not part of"],["Most people","Most people, as far as I can tell"],["Experts","People who are supposed to know"]],
     foot:"This tests your explanation of why they believe it. It doesn't rule on who is right."},
   what:{q:"What kind of belief is it?",
@@ -445,7 +445,7 @@ DOORS.belief={
 
 /* ---------- why I keep making the same mistake ---------- */
 DOORS.self={
-  title:"Why I keep making the same mistake",
+  title:"Why I keep doing something",
   subject:"you",closing:"This is what your answers support. It is not a verdict on you.",
   who:{q:"Think of one thing you keep doing. Not a trait. Where does it happen?",sub:"That it happens is not in question here. Why it happens is.",
     options:[["At work","At work"],["With money","With money"],["With people","With people close to me"],["With my health","With my health or habits"],["With decisions","When I have to decide something"]],
@@ -557,13 +557,130 @@ DOORS.self={
   heldPainful:"“A flaw in me” asks the least of the evidence and the most of you. It rests on your own account, which is usually harder on you than a stranger's would be."
 };
 
+/* ---------- where something is heading ---------- */
+DOORS.future={
+  title:"Where something is heading",
+  noun:"outcome",exclusive:1,
+  subject:"the future",closing:"This is what your answers support. It is not a forecast.",
+  rateKicker:"How else could it go",predKicker:"What each outcome would look like beforehand",
+  who:{q:"Think of one thing you expect to happen. What is it about?",sub:"That you expect it is not in question here. What the expectation rests on is.",
+    options:[["A market","A market, a price or a company"],["A technology","A technology"],["My field","My company or my field"],["Politics or society","Politics or society"],["My own plans","Something in my own life"]],
+    foot:"This tests what a prediction rests on. It can't tell you what will happen, and it is not financial advice."},
+  what:{q:"How far out?",
+    options:[["Within a year","Within a year"],["1–3 years","One to three years"],["3–10 years","Three to ten years"],["10+ years","Longer than that"]]},
+  count:{q:"How many predictions like this have you made before, and checked?",thin:"None checked",thinText:"you have no checked record on calls like this",
+    options:[["None checked","None that I've checked"],["A few, mostly right","A few, mostly right"],["A few, mixed","A few, with mixed results"],["Many, tracked","Many, and I keep track"]],
+    replies:{"None checked":"Then you have no record on this kind of call. Keep that in mind when you rate your confidence.","A few, mostly right":"A few is a short record, and the calls we remember tend to be the ones we got right."}},
+  readQ:"And your read? How does it go?",
+  M:{
+    asis:{s:"It happens, about when I expect.",n:"As expected",in:1,painful:1,
+          pred:"The cause is still in place, the people who must act gain from acting, and nothing so far has surprised you."},
+    slow:{s:"It happens, but much later than I expect.",n:"Later",in:0,
+          pred:"The direction holds. Each step takes longer than the last, as predictions like it usually do.",cond:"Predictions like this usually run late"},
+    stall:{s:"Something blocks it.",n:"Blocked",in:0,
+          pred:"Someone with the power to stop it loses if it happens.",cond:"Someone who can block it stands to lose"},
+    partial:{s:"It happens in some places, not everywhere.",n:"Partly",in:0,
+          pred:"It has taken hold in the easy cases. The hard ones differ in kind, not degree."},
+    reverse:{s:"The opposite happens.",n:"The opposite",in:0,
+          pred:"What drove it so far is weakening, and the early signs have already turned.",cond:"Something recent has gone against it"},
+    other:{s:"Something nobody is watching matters more.",n:"Something else",in:0,
+          pred:"Earlier forecasts in this area were overtaken by things no one was tracking."}
+  },
+  IDS:["asis","slow","stall","partial","reverse","other"],
+  story:{kicker:"What it rests on",
+    all:function(n,thr){return "The only outcome you rate"+thr+" is the one you expect, on schedule."},
+    none:function(n,thr){return n===1?"The outcome you rate"+thr+" is not the on-schedule one.":"None of the outcomes you rate"+thr+" is the on-schedule one."},
+    mixed:function(n,k,thr){return "Of the "+NUM[n]+" outcomes you rate"+thr+", one is the on-schedule one."},
+    qAll:"What makes the on-schedule outcome the likely one?",qNone:"What tells you that?",qMixed:"What makes the on-schedule outcome likely?",
+    optsIn:[["cause","I can name the cause, and it is still in place"],["trend","It has been going that way for a while"],["experts","People who know say so"],["none","Nothing specific. It's my reading."]],
+    optsOut:[["late","Things like this usually run late"],["block","Someone with power loses if it happens"],["signs","Recent signs have gone against it"],["none","Nothing specific. It's my reading."]],
+    replies:{cause:"A named cause is the strongest basis on this list. We'll come back to whether it holds.",
+      trend:"A trend shows what has happened. It is silent on why, and so on whether it continues.",
+      experts:"Then part of your confidence is borrowed. That can be right. It moves the question to their record.",
+      late:"That would be real evidence. We'll come back to whether you know it.",block:"That would be real evidence. We'll come back to whether you know it.",
+      signs:"That would be real evidence. We'll come back to whether you know it.",none:"Then it is an expectation without a stated basis. It may still be right."},
+    checks:{cause:{q:"f1",ok:"cause",say:"Earlier you said you could name the cause.",note:"You said you could name the cause, then didn't confirm it."},
+            late:{q:"f2",ok:"late",say:"Earlier you said things like this usually run late.",note:"You said things like this run late, then didn't confirm it."},
+            block:{q:"f3",ok:"lose",say:"Earlier you said someone with power loses if it happens.",note:"You said someone with power loses, then didn't confirm it."},
+            signs:{q:"f4",ok:"against",say:"Earlier you said recent signs have gone against it.",note:"You said recent signs went against it, then didn't confirm it."}}},
+  CHAIN:{cause:"I know what is causing it.",cont:"That cause will still be there.",time:"I know roughly how long it takes.",
+    act:"Nobody who matters will work against it.",neutral:"I'd expect it even if I didn't want it.",enough:"I know enough to tell these outcomes apart.",
+    power:"Someone has both the reason and the means to stop it.",turn:"What drove it so far is weakening.",blind:"The thing that matters most isn't being tracked."},
+  CHAIN_SHOWN:["cause","cont","time","act","neutral","enough"],
+  NEEDS:{asis:["cause","cont","time","act"],slow:["cause","cont"],partial:["cause"],stall:[],reverse:[],other:[]},
+  DENIES:{stall:"act",reverse:"cont",slow:"time"},
+  FALLBACK:{stall:"power",reverse:"turn",other:"blind"},
+  noNeeds:"It rests on something that isn't on this list.",
+  find:{ask:"By asking one person who would know",watch:"By checking a record or a number",
+    askedYes:"Then you have their account. Keep what they said separate from what you concluded.",
+    unWatch:"It could be checked. Until it is, this part is a guess.",tagWatch:"Unchecked"},
+  carry:{options:[["trend","How it has gone so far"],["logic","The logic of it"],["experts","People who know agree"],["stake","I've already acted on it"],["feel","A feeling"]],
+    replies:{trend:"The record so far shows where it has been. Every outcome here starts from the same record.",
+      logic:"An argument that feels complete is evidence about the argument. Forecasts fail on what the argument left out.",
+      experts:"Agreement among people who know is worth something. It is worth more if they have been right, on schedule, before.",
+      stake:"Having acted on it is a reason to want it true. It is not a reason it is true."},
+    checks:{}},
+  QS:["f1","f2","f3","f4"],
+  Q:{
+    f1:{q:"Is your expectation built on a cause you can name, or on a trend continuing?",col:"Basis",
+        o:[["cause","A cause I can name"],["trend","A trend continuing"],["dk","I'm not sure"]],
+        fit:{cause:{asis:1},trend:{asis:-1,slow:1}},
+        fact:{cause:"it rests on a cause you can name",trend:"it rests on a trend continuing"},
+        say:{cause:"Then it rests on a mechanism. That fits it happening as you expect, for as long as the cause stays in place.",
+             trend:"Then it rests on extrapolation. Trends end, and give no warning of when. “As expected” fits less well.",
+             dk:"Unknown. And this one is about your own reasoning."},
+        unk:"whether it rests on a cause or a trend"},
+    f2:{q:"How have predictions like this one usually turned out?",col:"Record",
+        o:[["ontime","Mostly right, and on time"],["late","Right in direction, late"],["wrong","Mostly wrong"],["dk","I don't know"]],
+        fit:{ontime:{asis:1,slow:-1},late:{slow:1,asis:-1},wrong:{asis:-1,other:1,reverse:1}},
+        fact:{ontime:"predictions like it have mostly been right and on time",late:"predictions like it have usually run late",wrong:"predictions like it have mostly been wrong"},
+        say:{ontime:"Then the record is on your side. That is the best single reason to expect it on schedule.",
+             late:"Then the usual error is timing. “Later” fits. “As expected” fits less well.",
+             wrong:"Then the record is against this whole kind of prediction. That fits something else overtaking it.",
+             dk:"Unknown. This is the outside view, and it is usually worth more than the details of the case."},
+        unk:"how predictions like this usually turn out"},
+    f3:{q:"The people who would have to act for it to happen: do they gain or lose?",col:"Who must act",
+        o:[["gain","They gain"],["lose","Someone who can block it loses"],["nobody","Nobody has to act"],["dk","I don't know"]],
+        fit:{gain:{asis:1,stall:-1},lose:{stall:1,partial:1,asis:-1},nobody:{stall:-1}},
+        fact:{gain:"the people who must act stand to gain",lose:"someone who can block it stands to lose",nobody:"nobody has to act for it to happen"},
+        say:{gain:"Then the people who can make it happen want it. “Blocked” fits less well.",
+             lose:"Then someone with the means to stop it has a reason to. “Blocked” fits, and so does it happening only where they can't reach.",
+             nobody:"Then nobody stands in the way. “Blocked” fits less well.",
+             dk:"Unknown. This is the fact that would show whether anything can stop it."},
+        unk:"whether those who must act gain or lose"},
+    f4:{q:"What has happened recently that your expectation didn't predict?",col:"Surprises",
+        o:[["nothing","Nothing"],["against","Something that went against it"],["dk","I haven't been checking"]],
+        fit:{nothing:{asis:1,reverse:-1},against:{reverse:1,slow:1,asis:-1}},
+        fact:{nothing:"nothing recent has surprised you",against:"something recent went against it"},
+        say:{nothing:"Then it has survived so far. That fits it holding. It is also what you would see if you weren't looking for surprises.",
+             against:"Then it has already missed once. That fits it running late, or turning. “As expected” fits less well.",
+             dk:"Unknown, because unchecked. This is the cheapest fact on the list to get."},
+        unk:"whether anything recent has gone against it"}
+  },
+  COND_MET:{slow:["f2","late"],stall:["f3","lose"],reverse:["f4","against"]},
+  wordsVsActs:function(){return false},
+  oppose:{read:"asis",q:"Build the strongest case that it doesn't happen on your schedule.",
+    options:[["late","Things like this have nearly always run late."],["block","Someone with the means to stop it has a reason to."],
+             ["trend","I'm extending a trend whose cause I can't name."],["miss","It has already missed once."]],
+    clash:{v:"late",q:"f2",bad:"ontime",
+      sayBad:"A few answers ago you said predictions like this have mostly been right and on time. The case can't stand on this.",
+      sayDk:"A few answers ago you didn't know how predictions like this turn out. The case now rests on it."},
+    defendPre:"“It will happen about when I expect. This time the cause is clear.”",
+    defend:[["a","Every forecast that ran late also had a clear cause."],["b","I've checked the direction. I haven't checked the timing."]],
+    built:"You could build a case that it runs late or stalls, from things you say are true."},
+  forecast:{q:"A year from now, what will you be able to point to?",
+    options:[["Clear progress, on schedule","Clear progress, on schedule"],["Progress, slower than I expected","Progress, slower than I expected"],["No visible change","No visible change"],["A sign that it has turned","A sign that it has turned"]]},
+  premise:"You came in with an expectation. Nothing here says it is wrong. The question was what it rests on.",
+  heldPainful:"A forecast that survives your own questions has passed the easiest test. The next one is the calendar."
+};
+
 var D, M, IDS, CHAIN, QS, Q, COND_MET, S;
 function useDoor(id){D=DOORS[id];M=D.M;IDS=D.IDS;CHAIN=D.CHAIN;QS=D.QS;Q=D.Q;COND_MET=D.COND_MET;doorLabel.textContent=D.title}
 function fresh(){S={know:{},base:{},after:{},marked:[],notes:[]};recap.textContent="";restartBtn.hidden=true}
 function start(){
   fresh();
   var h=(location.hash||"").replace("#","");
-  if(DOORS[h]){useDoor(h);who()}else doors();
+  if(DOORS[h]){useDoor(h);who()}else if(h==="someone")someone();else doors();
 }
 restartBtn.addEventListener("click",function(){if(location.hash)history.replaceState(null,"",location.pathname);fresh();doors()});
 
@@ -575,6 +692,7 @@ function show(html){stage.classList.remove("in");stage.innerHTML=html;void stage
 function setRecap(){var a=[];if(S.whoR)a.push(S.whoR);if(S.whatR)a.push(S.whatR);if(S.countR)a.push(S.countR);recap.textContent=a.join("  ·  ")}
 function F(k){var f=Q[k].fit;return typeof f==="function"?f(S):f}
 function fitOf(k,id){var a=S.know[k];if(!a||a==="dk")return null;return (F(k)[a]||{})[id]||0}
+function N(){return D.noun||"explanation"}
 function fnd(k,d){return (D.find&&D.find[k])||d}
 function opts(pairs){return pairs.map(function(p){return {v:p[0],l:p[1]}})}
 function order(){return (S.read?[S.read]:[]).concat(IDS.filter(function(id){return id!==S.read}))}
@@ -670,8 +788,14 @@ function rateScreen(o){
 /* ---------- screens ---------- */
 function doors(){
   doorLabel.textContent="";
-  ask({p:0,q:"What do you have a theory about?",sub:"Pick a direction.",
-    options:["person","rel","thing","belief","self"].map(function(k){return {v:k,l:DOORS[k].title}}),
+  ask({p:0,q:"What are you sure about?",sub:"Pick a direction.",
+    options:[{v:"someone",l:"Why someone acts the way they do"}].concat(["thing","future","belief","self"].map(function(k){return {v:k,l:DOORS[k].title}})),
+    next:function(v){if(v==="someone")someone();else{useDoor(v);who()}}});
+}
+function someone(){
+  doorLabel.textContent="";
+  ask({p:0,kicker:"Why someone acts the way they do",q:"What is it about them?",
+    options:[{v:"person",l:"Something they keep doing"},{v:"rel",l:"Something that has changed between us"}],
     next:function(v){useDoor(v);who()}});
 }
 function who(){
@@ -707,8 +831,8 @@ function conf(){
 }
 function rate(){
   var ids=IDS.filter(function(id){return id!==S.read});
-  rateScreen({p:.23,kicker:"What else could explain this",q:S.read?"Rate the other "+NUM[ids.length]+".":"Rate all "+NUM[ids.length]+".",
-    sub:"From almost impossible to almost certainly. More than one can be true.",ids:ids,
+  rateScreen({p:.23,kicker:D.rateKicker||"What else could explain this",q:S.read?"Rate the other "+NUM[ids.length]+".":"Rate all "+NUM[ids.length]+".",
+    sub:"From almost impossible to almost certainly."+(D.exclusive?"":" More than one can be true."),ids:ids,
     next:function(got){ids.forEach(function(id){S.base[id]=got[id]});story()}});
 }
 
@@ -799,7 +923,7 @@ function predict(){
     var c=COND_MET[id];return ((F(c[0])[c[1]]||{})[S.read]||0)<=0;
   }).map(function(id){return {v:id,l:M[id].cond}});
   ops.push({v:"none",l:"None of these would move me"});
-  ask({p:.57,kicker:"What each explanation predicts",pre:"If each were true, this is roughly what you would expect to see. These are this tool's assumptions, not facts about "+(D.subject||"this person")+"."+h,
+  ask({p:.57,kicker:D.predKicker||"What each explanation predicts",pre:(D.exclusive?"If each were on its way, this is roughly what you would see now.":"If each were true, this is roughly what you would expect to see.")+" These are this tool's assumptions, not facts about "+(D.subject||"this person")+"."+h,
     q:"Which of these, if you saw it, would move you off your read?",options:ops,
     respond:function(v){return v==="none"?"<p>Noted. Then nothing on this list could test your read.</p>":null},
     next:function(v){S.cond=v;know(0)}});
@@ -868,7 +992,7 @@ function defend(){
 
 function fitScreen(){
   setProg(.9);
-  var h='<div class="kicker">What your answers fit</div><h1>Here is how the four things you reported sit against each explanation.</h1>'+
+  var h='<div class="kicker">What your answers fit</div><h1>Here is how the four things you reported sit against each '+N()+'.</h1>'+
     '<div class="fitwrap"><table class="fit"><thead><tr><th scope="col"></th>'+QS.map(function(k){return '<th scope="col">'+Q[k].col+'</th>'}).join("")+'</tr></thead><tbody>';
   order().forEach(function(id){
     h+='<tr'+(id===S.read?' class="read"':'')+'><th scope="row">'+esc(M[id].n)+'</th>';
@@ -877,7 +1001,7 @@ function fitScreen(){
     h+='</tr>';
   });
   h+='</tbody></table></div><div class="legend"><span>● fits</span><span>○ fits less well</span><span>· doesn\'t separate</span><span>? you don\'t know</span></div>'+
-    '<p class="note">These marks are this tool\'s assumptions about what each explanation predicts, applied to what you reported from memory. They are not facts about '+(D.subject||'this person')+', and more than one explanation can be true.</p>'+contBtn();
+    '<p class="note">These marks are this tool\'s assumptions about what each explanation predicts, applied to what you reported from memory. They are not facts about '+(D.subject||'this person')+(D.exclusive?'.':', and more than one explanation can be true.')+'</p>'+contBtn();
   show(h);wireGo(rerate);
 }
 function rerate(){
@@ -925,23 +1049,23 @@ function findings(){
 
   if(kind==="held"){
     h1="Your read held.";
-    if(weak.length)lines.push("It is still your leading explanation. It has been tested less than your rating suggests: "+weak.join("; ")+".");
-    else lines.push("By your account it is the best-supported explanation here. That is your account, not theirs.");
+    if(weak.length)lines.push("It is still your leading "+N()+". It has been tested less than your rating suggests: "+weak.join("; ")+".");
+    else lines.push("By your account it is the best-supported "+N()+" here."+(D.subject?"":" That is your account, not theirs."));
   }else if(kind==="lower"){
     h1="Your read still leads, lower than you started.";
     if(weak.length)lines.push("Also worth carrying: "+weak.join("; ")+".");
   }else if(kind==="moved"){
-    h1="You now rate another explanation above your read.";
+    h1="You now rate another "+N()+" above your read.";
     lines.push("Both ratings were yours. What came between them was seeing what your answers fit.");
   }else if(kind==="inverted"){
-    h1="You bet on one explanation and rated another higher from the start.";
+    h1="You bet on one "+N()+" and rated another higher from the start.";
     lines.push("That was true before any question was asked. The bet and the ratings were never the same view.");
   }else if(kind==="level"){
     h1="Your read is level with "+names(tops.filter(function(id){return id!==r}))+".";
-    lines.push("More than one of these can be true at once.");
+    if(!D.exclusive)lines.push("More than one of these can be true at once.");
   }else if(kind==="open"){
     h1="You don't have enough to know yet.";
-    lines.push("You answered “I don't know” to "+(dks.length===4?"all four":"three of the four")+" facts that separate these explanations.");
+    lines.push("You answered “I don't know” to "+(dks.length===4?"all four":"three of the four")+" facts that separate these "+N()+"s.");
   }else{
     h1="You came in without a read.";
     lines.push(tops.length===1?"After seeing what your answers fit, you rate "+names(tops)+" highest.":"After seeing what your answers fit, "+names(tops)+" are level at the top.");
