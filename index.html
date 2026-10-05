@@ -24,7 +24,19 @@
 <body>
 <a class="skip" href="#main">Skip to content</a>
 
-<div class="stone" aria-hidden="true"></div>
+<svg class="mountain" aria-hidden="true" viewBox="0 0 1000 700">
+  <g class="far">
+    <polygon class="fl" points="40,700 250,330 268,470 236,700"/>
+    <polygon class="fr" points="250,330 430,590 500,700 236,700 268,470"/>
+  </g>
+  <polygon class="fl" points="150,700 340,440 430,300 560,90 592,262 538,424 612,700"/>
+  <polygon class="fr" points="560,90 705,285 810,410 1000,650 1000,700 612,700 538,424 592,262"/>
+  <polygon class="facet" points="150,700 340,440 410,566 372,700"/>
+  <polygon class="facet" points="430,300 560,90 520,250 470,330"/>
+  <polygon class="facet" points="705,285 810,410 742,528 662,436"/>
+  <polygon class="facet" points="612,700 700,560 820,700"/>
+  <path class="hill" d="M0,700 Q110,616 250,628 T520,618 T780,640 T1000,612 L1000,700 Z"/>
+</svg>
 
 <header class="top">
   <a class="wordmark" href="#top">The Other Side</a>
@@ -37,29 +49,31 @@
     <div class="col">
       <h1 id="h-open" class="statement">You can be right and still not know why.</h1>
       <div class="ask">
-        <p class="lead" id="ask-q">Someone has gone quiet on you. Why?</p>
+        <p class="lead" id="ask-q">What do you have a theory about?</p>
         <div class="choices" role="group" aria-labelledby="ask-q">
-          <button type="button" class="choice" data-c="upset" aria-pressed="false"><span class="k" aria-hidden="true">A</span><span>They're upset with me.</span></button>
-          <button type="button" class="choice" data-c="over" aria-pressed="false"><span class="k" aria-hidden="true">B</span><span>They're overwhelmed.</span></button>
-          <button type="button" class="choice" data-c="lose" aria-pressed="false"><span class="k" aria-hidden="true">C</span><span>They're losing interest.</span></button>
-          <button type="button" class="choice" data-c="none" aria-pressed="false"><span class="k" aria-hidden="true">D</span><span>It has nothing to do with me.</span></button>
+          <button type="button" class="choice" data-c="person" aria-pressed="false"><span class="k" aria-hidden="true">A</span><span>Why someone behaves the way they do</span></button>
+          <button type="button" class="choice" data-c="rel" aria-pressed="false"><span class="k" aria-hidden="true">B</span><span>Why a relationship changed</span></button>
+          <button type="button" class="choice" data-c="thing" aria-pressed="false"><span class="k" aria-hidden="true">C</span><span>Why something succeeded or failed</span></button>
+          <button type="button" class="choice" data-c="belief" aria-pressed="false"><span class="k" aria-hidden="true">D</span><span>Why people believe something you don't</span></button>
+          <button type="button" class="choice" data-c="self" aria-pressed="false"><span class="k" aria-hidden="true">E</span><span>Why I keep making the same mistake</span></button>
         </div>
-        <p class="label hint">Choose one, or keep scrolling</p>
+        <p class="label hint">Choose a direction, or keep scrolling</p>
       </div>
     </div>
   </section>
 
   <section id="turn" class="s s-turn" aria-labelledby="h-turn">
     <div class="col">
-      <p class="label" id="turn-pick">Whichever you would have chosen</p>
-      <h2 id="h-turn" class="head">The silence fits all four.</h2>
-      <p class="lead" id="turn-line">Your answer may be right. But silence is predicted equally by every one of these, so it can't be what is making you sure.</p>
-      <dl class="fits">
-        <div data-c="upset"><dt>Upset with you</dt><dd>Quiet with you, normal with everyone else. It began on a day you could name.</dd></div>
-        <div data-c="over"><dt>Overwhelmed</dt><dd>Quiet with everyone. Replies come late, short and apologetic.</dd></div>
-        <div data-c="lose"><dt>Losing interest</dt><dd>You start every exchange. Nothing is offered back.</dd></div>
-        <div data-c="none"><dt>Nothing to do with you</dt><dd>Quiet everywhere, about everything, for a reason you would never guess.</dd></div>
+      <p class="label" id="turn-pick">An example</p>
+      <p class="lead" id="turn-obs">Say they agreed in the meeting, then did nothing.</p>
+      <h2 id="h-turn" class="head">The same behavior fits all four.</h2>
+      <dl class="fits" id="fits">
+        <div><dt>They disagreed and didn't say so</dt><dd>Agreement came fast, with no questions. They raise it later, with someone else.</dd></div>
+        <div><dt>They agreed and are overloaded</dt><dd>Other commitments are slipping too. They apologize when asked.</dd></div>
+        <div><dt>They thought it was someone else's job</dt><dd>They are surprised when you follow up.</dd></div>
+        <div><dt>They're waiting to see if you meant it</dt><dd>They move as soon as you ask a second time.</dd></div>
       </dl>
+      <p class="lead" id="turn-line">Your explanation may be right. But the observation is compatible with every one of these, so on its own it can't tell them apart.</p>
       <p class="lead after">Which of those have you actually seen?</p>
     </div>
     <p class="sr" aria-live="polite" id="live"></p>
@@ -108,7 +122,7 @@
           <h3>Which observation would tell them apart?</h3>
           <p>Most of what you've noticed fits every explanation. A little of it doesn't. That little is the evidence.</p>
         </li>
-        <li class="step" data-g=".75" data-v="Likely · earned">
+        <li class="step" data-g=".75" data-v="Likely · tested">
           <span class="label">Four of four</span>
           <h3>Do you know that?</h3>
           <p>Often the fact that settles it is one you already have and hadn't used. Sometimes it is one question away.</p>
@@ -126,7 +140,7 @@
           <h3 class="label">It will</h3>
           <ul>
             <li>Ask for what's missing</li>
-            <li>Build the strongest rival explanations</li>
+            <li>Set your read against its strongest rivals</li>
             <li>Work out what each one predicts</li>
             <li>Show you where your own answers disagree</li>
           </ul>
@@ -150,9 +164,9 @@
     <div class="col wide">
       <h2 id="h-end" class="head">Four ways it ends. None of them ranked.</h2>
       <ul class="endings">
-        <li><h3>Your read held.</h3><p>The evidence distinguishes, and it points where you thought.</p></li>
-        <li><h3>Right, for the wrong reason.</h3><p>Same conclusion, different explanation. Often a different next move.</p></li>
-        <li><h3>Wrong.</h3><p>By your own answers, not ours.</p></li>
+        <li><h3>Your read held.</h3><p>By your account, it is still the best-supported explanation.</p></li>
+        <li><h3>It held, lower than you started.</h3><p>Still leading. Not at the confidence you came in with.</p></li>
+        <li><h3>Another explanation now leads.</h3><p>By your own second rating, not ours.</p></li>
         <li><h3>Not enough to know yet.</h3><p>Reality hasn't settled it. Now you know what would.</p></li>
       </ul>
     </div>
@@ -167,7 +181,7 @@
   <section id="begin" class="s s-cta" aria-labelledby="h-cta">
     <div class="col">
       <h2 id="h-cta" class="statement">Bring something you're sure about.</h2>
-      <p class="lead">Four minutes. No typing. Nothing stored.</p>
+      <p class="lead">A few minutes. No typing. Nothing stored.</p>
       <a class="cta" href="session/">Begin a session</a>
       <p class="label note">The first door is open: why a relationship changed.</p>
     </div>

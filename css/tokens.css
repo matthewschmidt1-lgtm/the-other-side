@@ -1,4 +1,4 @@
-/* One light crosses the page. --light moves the stone's lighting; --cross moves the ground from pine to mist. */
+/* One light crosses the page. --light moves the mountain's lighting; --cross moves the ground from pine to mist. */
 :root {
   --pine: #121A17;
   --slate: #1F2A28;
@@ -18,6 +18,11 @@
   --accent: var(--sage);
   --mark: var(--sage);
 
+  /* the mountain's lit face, shaded face and foothill, each carried across with the ground */
+  --m-lit: color-mix(in oklab, #A9B7A3 calc(var(--cross) * 100%), #C9D2C4);
+  --m-shade: color-mix(in oklab, #2F4A3A calc(var(--cross) * 100%), #1B2522);
+  --m-hill: color-mix(in oklab, #3B5A47 calc(var(--cross) * 100%), #16211D);
+
   --display: "Newsreader", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
   --body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
@@ -26,7 +31,7 @@
   --t-head: clamp(2rem, 4.2vw, 3.75rem);
   --t-lead: clamp(1.2rem, 1.7vw, 1.5rem);
   --t-body: 1.0625rem;
-  --t-label: 0.72rem;
+  --t-label: 0.78rem;
 
   --ease: cubic-bezier(.22, .61, .2, 1);
   --slow: 900ms;

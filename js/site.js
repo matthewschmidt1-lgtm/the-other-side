@@ -30,24 +30,55 @@
   window.addEventListener("resize", request);
   update();
 
-  /* ---------- the opening choice ---------- */
+  /* ---------- the opening choice: the visitor picks the direction ---------- */
+  var DEMOS = {
+    person: { obs: "Say they agreed in the meeting, then did nothing.", head: "The same behavior fits all four.", rows: [
+      ["They disagreed and didn't say so", "Agreement came fast, with no questions. They raise it later, with someone else."],
+      ["They agreed and are overloaded", "Other commitments are slipping too. They apologize when asked."],
+      ["They thought it was someone else's job", "They are surprised when you follow up."],
+      ["They're waiting to see if you meant it", "They move as soon as you ask a second time."]] },
+    rel: { obs: "Say they have gone quiet.", head: "The silence fits all four.", rows: [
+      ["Upset with you", "Cool with you, normal with everyone else. It began at a point you could name."],
+      ["Overwhelmed", "Quiet with most people. Replies come late, short and apologetic."],
+      ["Losing interest", "You start every exchange. Little is offered back."],
+      ["Keeping something from you", "Fine in company or by message. It is time alone with you that falls through."]] },
+    thing: { obs: "Say the launch fell flat.", head: "The same result fits all four.", rows: [
+      ["The product was wrong", "The people who tried it didn't come back."],
+      ["The timing was wrong", "People liked it and had no room for it yet."],
+      ["The right people never saw it", "The few who found it stayed."],
+      ["It worked, and you measured too early", "The numbers are small and still climbing."]] },
+    belief: { obs: "Say they believe something you are sure is false.", head: "The same disagreement fits all four.", rows: [
+      ["They have facts you don't", "They can name something specific you hadn't heard."],
+      ["They trust different sources", "Their evidence is who said it. So is yours."],
+      ["Changing their mind would cost them", "The belief is tied to people or work they would lose."],
+      ["You are the one who is wrong", "Your own reasons turn out to be secondhand."]] },
+    self: { obs: "Say you have done it again.", head: "The same mistake fits all four.", rows: [
+      ["You notice too late", "You can describe the moment only afterwards."],
+      ["It pays you in a way you haven't admitted", "Something gets easier every time you do it."],
+      ["The situation makes it nearly unavoidable", "Other people in your position do it too."],
+      ["By your own values, it isn't a mistake", "You would choose it again with full information."]] }
+  };
   var choices = [].slice.call(document.querySelectorAll(".choice"));
   var pickLabel = document.getElementById("turn-pick");
   var live = document.getElementById("live");
-  var rows = [].slice.call(document.querySelectorAll(".fits > div"));
+  var obs = document.getElementById("turn-obs");
+  var headEl = document.getElementById("h-turn");
+  var rows = [].slice.call(document.querySelectorAll("#fits > div"));
   choices.forEach(function (b) {
     b.addEventListener("click", function () {
-      var c = b.getAttribute("data-c");
+      var d = DEMOS[b.getAttribute("data-c")];
       var text = b.lastElementChild.textContent;
       choices.forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
-      rows.forEach(function (r) { r.classList.toggle("picked", r.getAttribute("data-c") === c); });
       pickLabel.textContent = "You chose: " + text;
-      live.textContent = "You chose: " + text + " The silence fits all four.";
+      obs.textContent = d.obs;
+      headEl.textContent = d.head;
+      rows.forEach(function (r, i) { r.children[0].textContent = d.rows[i][0]; r.children[1].textContent = d.rows[i][1]; });
+      live.textContent = "You chose: " + text + ". " + d.obs + " " + d.head;
       turn.scrollIntoView({ behavior: reduce.matches ? "auto" : "smooth", block: "start" });
     });
   });
 
-  /* ---------- the instrument ---------- */
+
   var gauge = document.getElementById("gauge");
   var val = document.getElementById("g-val");
   var steps = [].slice.call(document.querySelectorAll(".step"));

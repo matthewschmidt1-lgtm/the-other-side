@@ -27,29 +27,17 @@ body::after {
 .skip { position: fixed; left: 16px; top: -60px; z-index: 10; background: var(--ink); color: var(--ground); padding: 10px 14px; font-family: var(--mono); font-size: var(--t-label); letter-spacing: .1em; text-transform: uppercase; text-decoration: none; }
 .skip:focus { top: calc(env(safe-area-inset-top, 0px) + 12px); }
 
-/* ---------- the stone ---------- */
-.stone {
-  position: fixed; z-index: 0;
-  right: -9vw; top: 50%;
-  width: min(54vw, 82svh);
-  aspect-ratio: 1 / .92;
-  transform: translateY(calc(-50% - var(--light) * 5svh)) rotate(calc(var(--light) * 16deg));
-  border-radius: 57% 43% 48% 52% / 44% 56% 44% 56%;
-  background:
-    radial-gradient(circle at calc(14% + var(--light) * 72%) 30%,
-      #CDD4C8 0%, #9FAA9F 15%, #63716A 40%, #2D3A36 68%, #151D1A 100%);
-  box-shadow:
-    calc((.5 - var(--light)) * 90px) 44px 90px -24px rgba(0, 0, 0, .55),
-    inset calc((.5 - var(--light)) * -70px) -34px 90px rgba(0, 0, 0, .45);
-  overflow: hidden;
+/* ---------- the mountain: two faces, one light ---------- */
+.mountain {
+  position: fixed; z-index: 0; right: 0; bottom: 0;
+  width: min(58vw, 112svh); height: auto;
+  transform: translateY(calc(var(--light) * -2svh));
 }
-.stone::after {
-  content: ""; position: absolute; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.035 .06' numOctaves='4' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.1 -.25'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 100% 100%;
-  opacity: .5;
-  mix-blend-mode: multiply;
-}
+.mountain .fl { fill: color-mix(in oklab, var(--m-lit) calc((1 - var(--light)) * 100%), var(--m-shade)); }
+.mountain .fr { fill: color-mix(in oklab, var(--m-lit) calc(var(--light) * 100%), var(--m-shade)); }
+.mountain .facet { fill: var(--m-shade); opacity: .16; }
+.mountain .far { opacity: .5; }
+.mountain .hill { fill: var(--m-hill); }
 
 /* ---------- header ---------- */
 .top {
@@ -99,7 +87,6 @@ html:not(.js) .begin-link { opacity: 1; visibility: visible; }
 .choice:hover .k { color: var(--accent); }
 .choice[aria-pressed="true"] { padding-left: 12px; box-shadow: inset 3px 0 0 var(--mark); background: color-mix(in oklab, var(--mark) 16%, transparent); }
 .choice[aria-pressed="true"] .k { color: var(--ink); }
-.hint { opacity: .8; }
 
 /* turn */
 .fits { display: flex; flex-direction: column; border-top: 1px solid var(--rule); }
@@ -134,7 +121,7 @@ html:not(.js) .begin-link { opacity: 1; visibility: visible; }
 .step { min-height: 64svh; display: flex; flex-direction: column; justify-content: center; gap: 14px; transition: opacity var(--slow) var(--ease); }
 .step h3 { font-family: var(--display); font-weight: 300; font-size: clamp(1.7rem, 3vw, 2.6rem); line-height: 1.12; letter-spacing: -.01em; text-wrap: balance; }
 .step p { color: var(--ink-2); max-width: 30em; }
-.js .step { opacity: .3; }
+.js .step { opacity: .5; }
 .js .step.on { opacity: 1; }
 
 /* law */
@@ -168,16 +155,16 @@ html:not(.js) .crossing { height: 0; }
 .foot { position: relative; z-index: 1; display: flex; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap;
   padding: 22px var(--gutter) calc(env(safe-area-inset-bottom, 0px) + 26px); border-top: 1px solid var(--rule); }
 
-/* ---------- small screens: the stone goes behind the text ---------- */
+/* ---------- small screens: the mountain goes behind the text ---------- */
 @media (max-width: 899px) {
-  .stone { width: 118vw; right: -52vw; top: 34%; opacity: .3; }
+  .mountain { width: 150vw; right: -34vw; opacity: .3; }
   .s { padding-block: 14svh; }
 }
 
 /* ---------- motion ---------- */
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
-  .stone { animation: lit 1400ms var(--ease) both; }
+  .mountain { animation: lit 1400ms var(--ease) both; }
   .wordmark { animation: arrive 700ms var(--ease) 500ms both; }
   .s-open .statement { animation: arrive 900ms var(--ease) 750ms both; }
   .s-open .ask { animation: arrive 900ms var(--ease) 1100ms both; }
