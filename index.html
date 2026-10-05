@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>The Other Side</title>
-<meta name="description" content="An instrument for examining certainty. Bring something you're sure about and find out what your confidence is resting on.">
+<meta name="description" content="An instrument for testing what you're sure about. Bring a conclusion, set it against its strongest rivals, and see whether your evidence can tell them apart.">
 <link rel="canonical" href="https://the-other-side-production-63a2.up.railway.app/">
 <meta name="theme-color" content="#121A17">
 <meta property="og:type" content="website">
@@ -40,7 +40,7 @@
 
 <header class="top">
   <a class="wordmark" href="#top">The Other Side</a>
-  <a class="begin-link" href="#begin">Begin</a>
+  <a class="begin-link" href="session/">Test it</a>
 </header>
 
 <main id="main" class="page">
@@ -48,91 +48,126 @@
   <section id="top" class="s s-open" aria-labelledby="h-open">
     <div class="col">
       <h1 id="h-open" class="statement">You can be right and still not know why.</h1>
-      <div class="ask">
-        <p class="lead" id="ask-q">What do you have a theory about?</p>
-        <div class="choices" role="group" aria-labelledby="ask-q">
-          <button type="button" class="choice" data-c="person" aria-pressed="false"><span class="k" aria-hidden="true">A</span><span>Why someone behaves the way they do</span></button>
-          <button type="button" class="choice" data-c="rel" aria-pressed="false"><span class="k" aria-hidden="true">B</span><span>Why a relationship changed</span></button>
-          <button type="button" class="choice" data-c="thing" aria-pressed="false"><span class="k" aria-hidden="true">C</span><span>Why something succeeded or failed</span></button>
-          <button type="button" class="choice" data-c="belief" aria-pressed="false"><span class="k" aria-hidden="true">D</span><span>Why people believe something you don't</span></button>
-          <button type="button" class="choice" data-c="self" aria-pressed="false"><span class="k" aria-hidden="true">E</span><span>Why I keep making the same mistake</span></button>
-        </div>
-        <p class="label hint">Choose a direction, or keep scrolling</p>
+      <div class="what">
+        <p class="lead strong">The Other Side is an instrument for testing what you're sure about.</p>
+        <p class="lead">Bring a conclusion about something that happened. It sets your explanation against its strongest rivals and shows whether what you've seen can tell them apart.</p>
+      </div>
+      <div class="act">
+        <a class="cta" href="session/">See if you're as sure as you think</a>
+        <p class="label facts">No prompt to write · You tap answers · A few minutes</p>
+        <p class="label facts">You don't have to change your mind</p>
       </div>
     </div>
   </section>
 
-  <section id="turn" class="s s-turn" aria-labelledby="h-turn">
+  <section id="turn" class="s s-demo" aria-labelledby="h-demo">
     <div class="col">
-      <p class="label" id="turn-pick">An example</p>
-      <p class="lead" id="turn-obs">Say they agreed in the meeting, then did nothing.</p>
-      <h2 id="h-turn" class="head">The same behavior fits all four.</h2>
-      <dl class="fits" id="fits">
-        <div><dt>They disagreed and didn't say so</dt><dd>Agreement came fast, with no questions. They raise it later, with someone else.</dd></div>
-        <div><dt>They agreed and are overloaded</dt><dd>Other commitments are slipping too. They apologize when asked.</dd></div>
-        <div><dt>They thought it was someone else's job</dt><dd>They are surprised when you follow up.</dd></div>
-        <div><dt>They're waiting to see if you meant it</dt><dd>They move as soon as you ask a second time.</dd></div>
-      </dl>
-      <p class="lead" id="turn-line">Your explanation may be right. But the observation is compatible with every one of these, so on its own it can't tell them apart.</p>
-      <p class="lead after">Which of those have you actually seen?</p>
+      <p class="label">Try the idea here</p>
+      <h2 id="h-demo" class="head">Pick something you have a theory about.</h2>
+      <div class="choices" role="group" aria-labelledby="h-demo">
+        <button type="button" class="choice dir" data-c="person" aria-pressed="true"><span class="k" aria-hidden="true">A</span><span>Why someone behaves the way they do</span></button>
+        <button type="button" class="choice dir" data-c="rel" aria-pressed="false"><span class="k" aria-hidden="true">B</span><span>Why a relationship changed</span></button>
+        <button type="button" class="choice dir" data-c="thing" aria-pressed="false"><span class="k" aria-hidden="true">C</span><span>Why something succeeded or failed</span></button>
+        <button type="button" class="choice dir" data-c="belief" aria-pressed="false"><span class="k" aria-hidden="true">D</span><span>Why people believe something you don't</span></button>
+        <button type="button" class="choice dir" data-c="self" aria-pressed="false"><span class="k" aria-hidden="true">E</span><span>Why I keep making the same mistake</span></button>
+      </div>
+
+      <div class="demo">
+        <p class="label">An example</p>
+        <p class="lead strong" id="demo-q"><span id="turn-obs">Say they agreed in the meeting, then did nothing.</span> What explains it?</p>
+        <div class="choices" role="group" aria-labelledby="demo-q" id="expl">
+          <button type="button" class="choice ex" aria-pressed="false"><span class="k" aria-hidden="true">1</span><span>They disagreed and didn't say so</span></button>
+          <button type="button" class="choice ex" aria-pressed="false"><span class="k" aria-hidden="true">2</span><span>They agreed and are overloaded</span></button>
+          <button type="button" class="choice ex" aria-pressed="false"><span class="k" aria-hidden="true">3</span><span>They thought it was someone else's job</span></button>
+          <button type="button" class="choice ex" aria-pressed="false"><span class="k" aria-hidden="true">4</span><span>They're waiting to see if you meant it</span></button>
+        </div>
+      </div>
+
+      <div class="reveal wait" id="reveal">
+        <h3 class="head" id="h-turn">The same behavior fits all four.</h3>
+        <p class="label">What you would expect to see if each were true</p>
+        <dl class="fits" id="fits">
+          <div><dt>They disagreed and didn't say so</dt><dd>Agreement came fast, with no questions. They raise it later, with someone else.</dd></div>
+          <div><dt>They agreed and are overloaded</dt><dd>Other commitments are slipping too. They apologize when asked.</dd></div>
+          <div><dt>They thought it was someone else's job</dt><dd>They are surprised when you follow up.</dd></div>
+          <div><dt>They're waiting to see if you meant it</dt><dd>They move as soon as you ask a second time.</dd></div>
+        </dl>
+        <p class="pull">Your explanation may be right. But the observation is compatible with every one of these, so on its own it can't tell them apart.</p>
+        <p class="lead">That is the whole instrument: find what would tell them apart, then check whether you know it.</p>
+      </div>
     </div>
     <p class="sr" aria-live="polite" id="live"></p>
   </section>
 
-  <section class="s s-thesis" aria-label="What we believe">
-    <div class="col">
-      <p class="statement">Understanding is not surrender.</p>
-      <p class="lead">You don't have to agree with someone to see what they see.</p>
-    </div>
-  </section>
-  <section class="s s-thesis" aria-label="What we believe, continued">
-    <div class="col">
-      <p class="statement">Certainty should be proportional to evidence.</p>
-      <p class="lead">Experience makes confidence cheap. That is when it is most worth checking.</p>
-    </div>
-  </section>
-  <section class="s s-thesis" aria-label="What we believe, concluded">
-    <div class="col">
-      <p class="statement">Before you trust a conclusion, know what would make it wrong.</p>
-      <p class="lead">Sometimes your first read is the best one. Then it will survive this.</p>
+  <section id="endings" class="s s-end" aria-labelledby="h-end">
+    <div class="col wide">
+      <p class="label">What you might leave with</p>
+      <h2 id="h-end" class="head">Four ways it ends. None of them ranked.</h2>
+      <ul class="endings">
+        <li><h3>Your read held.</h3><p>By your account, it is still the best-supported explanation.</p></li>
+        <li><h3>It held, lower than you started.</h3><p>Still leading. Not at the confidence you came in with.</p></li>
+        <li><h3>Another explanation now leads.</h3><p>By your own second rating, not ours.</p></li>
+        <li><h3>Not enough to know yet.</h3><p>Reality hasn't settled it. Now you know what would.</p></li>
+      </ul>
+      <p class="lead">It is not built to make you doubt yourself. Sometimes your first read is the best one, and then it survives this.</p>
     </div>
   </section>
 
   <section id="instrument" class="s s-inst" aria-labelledby="h-inst">
     <div class="col">
+      <p class="label">How a session goes</p>
       <h2 id="h-inst" class="head">Four questions, asked of anything you're sure about.</h2>
-      <div class="gauge" id="gauge" style="--g:.9">
-        <div class="g-top"><span class="label">Confidence in your read</span><span class="label g-val" id="g-val">Almost certain · untested</span></div>
+      <p class="lead">An example. You say: <span class="say">“They ignored my message because they're angry with me.”</span></p>
+      <div class="gauge" id="gauge" style="--g:.95">
+        <div class="g-top"><span class="label">Your own rating of your read</span><span class="label g-val" id="g-val">Almost certainly · first rating</span></div>
         <div class="g-track" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><b></b></div>
         <div class="g-ends label" aria-hidden="true"><span>Impossible</span><span>Certain</span></div>
       </div>
       <ol class="steps">
-        <li class="step" data-g=".78" data-v="Likely · rivals on the table">
+        <li class="step" data-g=".95" data-v="Almost certainly · first rating">
           <span class="label">One of four</span>
           <h3>What else could explain this?</h3>
-          <p>Not weaker versions of your view. The strongest rivals to it.</p>
+          <ul class="mini">
+            <li>They're angry with you.</li>
+            <li>They're overwhelmed.</li>
+            <li>They didn't see it.</li>
+            <li>They don't know how to reply.</li>
+          </ul>
         </li>
-        <li class="step" data-g=".72" data-v="Likely · now testable">
+        <li class="step" data-g=".95" data-v="Almost certainly · first rating">
           <span class="label">Two of four</span>
           <h3>What would we expect to see if that were true?</h3>
-          <p>An explanation that predicts nothing can't be tested. Each one has to say what it would look like.</p>
+          <dl class="mini">
+            <div><dt>Angry</dt><dd>Short with you elsewhere too. Fine with others.</dd></div>
+            <div><dt>Overwhelmed</dt><dd>Slow with everyone.</dd></div>
+            <div><dt>Didn't see it</dt><dd>Replies at once when nudged.</dd></div>
+            <div><dt>Unsure how to reply</dt><dd>Reads it, starts, stops.</dd></div>
+          </dl>
         </li>
-        <li class="step" data-g=".5" data-v="Plausible · most evidence fits every story">
+        <li class="step" data-g=".95" data-v="Almost certainly · first rating">
           <span class="label">Three of four</span>
           <h3>Which observation would tell them apart?</h3>
-          <p>Most of what you've noticed fits every explanation. A little of it doesn't. That little is the evidence.</p>
+          <p>Not the silence. All four predict that. Whether they are slow with everyone does.</p>
         </li>
-        <li class="step" data-g=".75" data-v="Likely · tested">
+        <li class="step" data-g=".95" data-v="Almost certainly · first rating">
           <span class="label">Four of four</span>
           <h3>Do you know that?</h3>
-          <p>Often the fact that settles it is one you already have and hadn't used. Sometimes it is one question away.</p>
+          <p>You tap one: yes, no, or I don't know. “I don't know” is an answer here. Often it is the finding.</p>
+        </li>
+        <li class="step" data-g=".75" data-v="Likely · second rating">
+          <span class="label">Result</span>
+          <h3>Your read still leads. Lower than you started.</h3>
+          <p>You see what your answers fit, then rate everything again. Both ratings are yours. The instrument never assigns one.</p>
         </li>
       </ol>
     </div>
   </section>
 
+  <div class="crossing" id="crossing" aria-hidden="true"></div>
+
   <section id="law" class="s s-law" aria-labelledby="h-law">
     <div class="col">
+      <p class="label">What it won't do</p>
       <h2 id="h-law" class="head">We won't tell you what someone else thinks.</h2>
       <p class="lead">We'll help you find out what you'd need to know.</p>
       <div class="law">
@@ -158,32 +193,27 @@
     </div>
   </section>
 
-  <div class="crossing" id="crossing" aria-hidden="true"></div>
-
-  <section id="endings" class="s s-end" aria-labelledby="h-end">
-    <div class="col wide">
-      <h2 id="h-end" class="head">Four ways it ends. None of them ranked.</h2>
-      <ul class="endings">
-        <li><h3>Your read held.</h3><p>By your account, it is still the best-supported explanation.</p></li>
-        <li><h3>It held, lower than you started.</h3><p>Still leading. Not at the confidence you came in with.</p></li>
-        <li><h3>Another explanation now leads.</h3><p>By your own second rating, not ours.</p></li>
-        <li><h3>Not enough to know yet.</h3><p>Reality hasn't settled it. Now you know what would.</p></li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="s s-not" aria-label="What it is not">
+  <section id="name" class="s s-name" aria-labelledby="h-name">
     <div class="col">
-      <p class="statement">Not a course. Not a coach. Not a test of who you are.</p>
+      <p class="label">The name</p>
+      <h2 id="h-name" class="head">The other side is not the other person's side.</h2>
+      <p class="lead">It is every explanation you didn't choose. The question is never who is right. It is whether what you have seen can tell your explanation from the rest.</p>
+      <ul class="principles">
+        <li>Understanding is not surrender.</li>
+        <li>Certainty should be proportional to evidence.</li>
+        <li>Before you trust a conclusion, know what would make it wrong.</li>
+      </ul>
+      <p class="label">Not a debate tool · Not advice · Not a test of who you are</p>
     </div>
   </section>
 
   <section id="begin" class="s s-cta" aria-labelledby="h-cta">
     <div class="col">
       <h2 id="h-cta" class="statement">Bring something you're sure about.</h2>
-      <p class="lead">A few minutes. No typing. Nothing stored.</p>
-      <a class="cta" href="session/">Begin: why a relationship changed</a>
+      <p class="lead">You don't have to change your mind. Just find out whether your evidence supports your confidence.</p>
+      <a class="cta" href="session/">See if you're as sure as you think</a>
       <p class="label note" id="cta-note">One direction is open so far: why a relationship changed.</p>
+      <p class="label note">No typing. Your answers stay in your browser tab; nothing is sent or saved.</p>
     </div>
   </section>
 
@@ -191,7 +221,7 @@
 
 <footer class="foot">
   <span class="label">The Other Side</span>
-  <span class="label">An instrument for examining certainty</span>
+  <span class="label">An instrument for testing what you're sure about</span>
 </footer>
 
 <script src="js/site.js" defer></script>

@@ -58,30 +58,41 @@
       ["The situation makes it nearly unavoidable", "Other people in your position do it too."],
       ["By your own values, it isn't a mistake", "You would choose it again with full information."]] }
   };
-  var choices = [].slice.call(document.querySelectorAll(".choice"));
-  var pickLabel = document.getElementById("turn-pick");
+  var dirs = [].slice.call(document.querySelectorAll(".choice.dir"));
+  var exs = [].slice.call(document.querySelectorAll(".choice.ex"));
   var live = document.getElementById("live");
   var obs = document.getElementById("turn-obs");
   var headEl = document.getElementById("h-turn");
+  var reveal = document.getElementById("reveal");
   var rows = [].slice.call(document.querySelectorAll("#fits > div"));
-  choices.forEach(function (b) {
+  var current = DEMOS.person;
+  dirs.forEach(function (b) {
     b.addEventListener("click", function () {
-      var d = DEMOS[b.getAttribute("data-c")];
-      var text = b.lastElementChild.textContent;
-      choices.forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
-      pickLabel.textContent = "You chose: " + text;
-      obs.textContent = d.obs;
-      headEl.textContent = d.head;
-      rows.forEach(function (r, i) { r.children[0].textContent = d.rows[i][0]; r.children[1].textContent = d.rows[i][1]; });
-      live.textContent = "You chose: " + text + ". " + d.obs + " " + d.head;
+      current = DEMOS[b.getAttribute("data-c")];
+      dirs.forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      obs.textContent = current.obs;
+      headEl.textContent = current.head;
+      exs.forEach(function (x, i) { x.setAttribute("aria-pressed", "false"); x.lastElementChild.textContent = current.rows[i][0]; });
+      rows.forEach(function (r, i) { r.classList.remove("picked"); r.children[0].textContent = current.rows[i][0]; r.children[1].textContent = current.rows[i][1]; });
+      reveal.classList.add("wait");
+      live.textContent = "Example: " + current.obs + " What explains it?";
       document.getElementById("cta-note").textContent = b.getAttribute("data-c") === "rel"
         ? "This is the direction you chose."
-        : "The direction you chose isn't open yet. This one is.";
-      turn.scrollIntoView({ behavior: reduce.matches ? "auto" : "smooth", block: "start" });
+        : "The direction you chose isn't open yet. This one is: why a relationship changed.";
+    });
+  });
+  exs.forEach(function (b, n) {
+    b.addEventListener("click", function () {
+      exs.forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      rows.forEach(function (r, i) { r.classList.toggle("picked", i === n); });
+      reveal.classList.remove("wait");
+      live.textContent = current.head + " Your explanation may be right, but the observation is compatible with every one of these.";
+      reveal.scrollIntoView({ behavior: reduce.matches ? "auto" : "smooth", block: "start" });
+      request();
     });
   });
 
-
+  /* ---------- the instrument ---------- */
   var gauge = document.getElementById("gauge");
   var val = document.getElementById("g-val");
   var steps = [].slice.call(document.querySelectorAll(".step"));

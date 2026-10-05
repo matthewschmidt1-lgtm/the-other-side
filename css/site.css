@@ -72,7 +72,7 @@ html:not(.js) .begin-link { opacity: 1; visibility: visible; }
 .label { font-family: var(--mono); font-size: var(--t-label); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); font-weight: 400; }
 
 /* opening */
-.s-open .col { gap: clamp(40px, 9svh, 88px); }
+.s-open .col { gap: clamp(28px, 5svh, 48px); }
 .ask { display: flex; flex-direction: column; gap: 16px; }
 .ask .lead { color: var(--ink); }
 .choices { display: flex; flex-direction: column; border-top: 1px solid var(--rule); }
@@ -155,6 +155,25 @@ html:not(.js) .crossing { height: 0; }
 .foot { position: relative; z-index: 1; display: flex; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap;
   padding: 22px var(--gutter) calc(env(safe-area-inset-bottom, 0px) + 26px); border-top: 1px solid var(--rule); }
 
+/* product explanation, demonstration and walkthrough */
+.what, .act, .demo, .reveal { display: flex; flex-direction: column; gap: 14px; }
+.act { gap: 12px; }
+.lead.strong, .say { color: var(--ink); }
+.facts { margin: 0; }
+.demo { margin-top: 12px; }
+.reveal { gap: 22px; margin-top: 20px; padding-top: 28px; border-top: 1px solid var(--ink); }
+.js .reveal.wait { display: none; }
+.reveal, .s { scroll-margin-top: 84px; }
+.pull { font-family: var(--display); font-weight: 300; font-size: clamp(1.5rem, 2.6vw, 2.2rem); line-height: 1.2; letter-spacing: -.01em; text-wrap: balance; }
+.mini { display: flex; flex-direction: column; border-top: 1px solid var(--rule); max-width: 30em; }
+ul.mini li, dl.mini > div { padding: 9px 0; border-bottom: 1px solid var(--rule); }
+dl.mini > div { display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: 2px 16px; }
+dl.mini dd { color: var(--ink-2); }
+.principles { display: flex; flex-direction: column; border-top: 1px solid var(--rule); }
+.principles li { font-family: var(--display); font-size: var(--t-lead); padding: 14px 0; border-bottom: 1px solid var(--rule); }
+.s-demo, .s-end, .s-law, .s-name { padding-block: 12svh; }
+@media (max-width: 560px) { dl.mini > div { grid-template-columns: 1fr; } }
+
 /* ---------- small screens: the mountain goes behind the text ---------- */
 @media (max-width: 899px) {
   .mountain { width: 150vw; right: -34vw; opacity: .3; }
@@ -167,7 +186,8 @@ html:not(.js) .crossing { height: 0; }
   .mountain { animation: lit 1400ms var(--ease) both; }
   .wordmark { animation: arrive 700ms var(--ease) 500ms both; }
   .s-open .statement { animation: arrive 900ms var(--ease) 750ms both; }
-  .s-open .ask { animation: arrive 900ms var(--ease) 1100ms both; }
+  .s-open .what { animation: arrive 900ms var(--ease) 1000ms both; }
+  .s-open .act { animation: arrive 900ms var(--ease) 1250ms both; }
 }
 @keyframes lit { from { opacity: 0; filter: brightness(.25); } }
 @keyframes arrive { from { opacity: 0; } }
