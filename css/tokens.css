@@ -1,0 +1,43 @@
+/* One light crosses the page. --light moves the stone's lighting; --cross moves the ground from pine to mist. */
+:root {
+  --pine: #121A17;
+  --slate: #1F2A28;
+  --granite: #6E7773;
+  --moss: #6F8468;
+  --sage: #9CAB93;
+  --forest: #2F4A3A;
+  --mist: #E3E6DF;
+
+  --light: 0;   /* 0 = lit from the left, 1 = lit from the right */
+  --cross: 0;   /* 0 = pine ground, 1 = mist ground */
+
+  --ground: color-mix(in oklab, var(--mist) calc(var(--cross) * 100%), var(--pine));
+  --ink: var(--mist);
+  --ink-2: color-mix(in oklab, var(--ink) 64%, var(--ground));
+  --rule: color-mix(in oklab, var(--ink) 20%, var(--ground));
+  --accent: var(--sage);
+  --mark: var(--sage);
+
+  --display: "Newsreader", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+
+  --t-statement: clamp(2.5rem, 5.4vw, 5.25rem);
+  --t-head: clamp(2rem, 4.2vw, 3.75rem);
+  --t-lead: clamp(1.2rem, 1.7vw, 1.5rem);
+  --t-body: 1.0625rem;
+  --t-label: 0.72rem;
+
+  --ease: cubic-bezier(.22, .61, .2, 1);
+  --slow: 900ms;
+  --gutter: clamp(20px, 7vw, 112px);
+
+  color-scheme: dark;
+}
+
+:root[data-side="far"] {
+  --ink: var(--pine);
+  --accent: var(--forest);
+  --mark: var(--forest);
+  color-scheme: light;
+}

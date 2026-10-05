@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="A four-minute session: one belief about one person, tested against its alternatives.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>A session · The Other Side</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+<style>
+/* Layout: one left-aligned reading column, one question per screen, a five-step gauge as the only instrument. */
+:root{
+  --bg:#E3E6DF; --fg:#121A17; --muted:#59635E; --line:#C6CCC3; --surface:#D6DBD1;
+  --accent:#2F4A3A; --accent-ink:#E3E6DF;
+  --display:"Newsreader","Iowan Old Style","Palatino Linotype",Georgia,serif;
+  --body:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#121A17; --fg:#E3E6DF; --muted:#97A29B; --line:#2A3633; --surface:#1C2623;
+  --accent:#9CAB93; --accent-ink:#121A17; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#121A17; --fg:#E3E6DF; --muted:#97A29B; --line:#2A3633; --surface:#1C2623;
+  --accent:#9CAB93; --accent-ink:#121A17; color-scheme:dark }
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5;
+  padding-inline:20px;display:flex;flex-direction:column}
+.wrap{width:100%;max-width:660px;margin-inline:auto;flex:1;display:flex;flex-direction:column;gap:0}
+
+header{padding-block:22px 0;display:flex;flex-direction:column;gap:14px}
+.bar{display:flex;justify-content:space-between;align-items:baseline;gap:16px}
+.mark{font-family:var(--display);font-size:1.15rem;font-style:italic;letter-spacing:.005em}
+.restart{font-family:var(--mono);font-size:.69rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+  background:none;border:0;padding:4px 0;cursor:pointer}
+.restart:hover{color:var(--accent)}
+.prog{height:1px;background:var(--line);position:relative}
+.prog i{position:absolute;left:0;top:-0.5px;height:2px;background:var(--accent);width:0;transition:width .5s ease}
+.recap{font-family:var(--mono);font-size:.69rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);min-height:1.2em}
+
+main{flex:1;padding-block:clamp(28px,7vh,72px) 48px;display:flex;flex-direction:column;gap:22px;min-width:0}
+main.in{animation:rise .35s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.kicker{font-family:var(--mono);font-size:.69rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.pre{font-family:var(--display);font-size:1.2rem;line-height:1.4;color:var(--muted);max-width:34em}
+.pre strong{color:var(--fg);font-weight:500}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(1.65rem,4.6vw,2.35rem);line-height:1.14;
+  letter-spacing:-.01em;margin:0;text-wrap:balance;max-width:20em}
+.sub{color:var(--muted);margin:0;max-width:36em}
+
+.opts{display:flex;flex-direction:column;border-top:1px solid var(--line);margin-top:6px}
+.opt{display:flex;gap:16px;align-items:baseline;text-align:left;width:100%;background:none;border:0;
+  border-bottom:1px solid var(--line);padding:14px 8px 14px 4px;font:inherit;font-size:1.02rem;color:var(--fg);cursor:pointer;
+  transition:background .15s ease,padding-left .15s ease}
+.opt .k{font-family:var(--mono);font-size:.72rem;color:var(--muted);width:1.2em;flex:none}
+.opt .t{min-width:0}
+.opt .n{display:block;font-size:.82rem;color:var(--muted)}
+.opt:hover:not(:disabled){background:var(--surface);padding-left:10px}
+.opt:hover:not(:disabled) .k{color:var(--accent)}
+.opt[aria-pressed="true"]{background:var(--surface);padding-left:10px}
+.opt[aria-pressed="true"] .k{color:var(--accent);font-weight:500}
+.opt[aria-pressed="true"] .t{font-weight:500}
+.opt:disabled{cursor:default}
+.opt:disabled:not([aria-pressed="true"]){color:var(--muted)}
+.done .opt:not([aria-pressed="true"]){opacity:.45}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.reply{display:flex;flex-direction:column;gap:18px;animation:rise .35s ease both}
+.reply p{font-family:var(--display);font-size:1.3rem;line-height:1.35;margin:0;max-width:30em}
+.reply p.small{font-family:var(--body);font-size:.95rem;color:var(--muted)}
+.go{align-self:flex-start;font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--accent);color:var(--accent-ink);border:0;border-radius:2px;padding:12px 18px;cursor:pointer}
+.go:disabled{background:var(--line);color:var(--muted);cursor:default}
+.go span{opacity:.7;margin-left:10px}
+
+/* rating rows */
+.rate{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.rrow{display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:8px 20px;align-items:center;padding:14px 4px;border-bottom:1px solid var(--line)}
+.rrow .nm{min-width:0}
+.rrow .lv{font-family:var(--mono);font-size:.69rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);display:block;min-height:1.3em}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.scale button{height:30px;background:none;border:1px solid var(--line);border-radius:2px;cursor:pointer;padding:0}
+.scale button:hover{border-color:var(--accent)}
+.scale button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent)}
+.ends{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  width:190px;margin-left:auto;padding-right:4px}
+@media (max-width:520px){ .rrow{grid-template-columns:1fr} .ends{width:100%} }
+
+/* predictions */
+.preds{display:flex;flex-direction:column;border-top:1px solid var(--line);margin:0}
+.preds div{display:grid;grid-template-columns:9.5em minmax(0,1fr);gap:4px 16px;padding:11px 4px;border-bottom:1px solid var(--line)}
+.preds dt{font-family:var(--mono);font-size:.69rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:.25em}
+.preds dd{margin:0}
+.preds .mine dt{color:var(--accent)}
+@media (max-width:520px){ .preds div{grid-template-columns:1fr} }
+
+/* gauge */
+.gauge{display:flex;flex-direction:column;gap:10px;padding-block:6px}
+.g-row{display:grid;grid-template-columns:8.5em minmax(0,1fr) 9.5em;gap:14px;align-items:center}
+.g-name{font-size:.9rem;min-width:0}
+.g-name b{font-weight:500}
+.g-name small{display:block;font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.g-track{position:relative;height:18px;margin-inline:6px}
+.g-track::before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:var(--line)}
+.g-track s{position:absolute;top:5px;width:1px;height:8px;background:var(--line)}
+.g-ghost,.g-dot{position:absolute;top:50%;width:11px;height:11px;border-radius:50%;transform:translate(-50%,-50%)}
+.g-ghost{border:1px solid var(--muted);background:var(--bg)}
+.g-dot{background:var(--fg);transition:left .9s cubic-bezier(.2,.7,.2,1)}
+.g-row.read .g-dot{background:var(--accent)}
+.g-val{font-family:var(--mono);font-size:.66rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);text-align:right}
+.g-val.moved{color:var(--fg)}
+@media (max-width:520px){ .g-row{grid-template-columns:6.4em minmax(0,1fr)} .g-val{display:none} }
+
+/* findings */
+.card{display:flex;flex-direction:column;border-top:1px solid var(--fg);margin:0}
+.card div{display:grid;grid-template-columns:11em minmax(0,1fr);gap:4px 16px;padding:13px 4px;border-bottom:1px solid var(--line)}
+.card dt{font-family:var(--mono);font-size:.69rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:.3em}
+.card dd{margin:0;font-family:var(--display);font-size:1.15rem;line-height:1.35}
+.card dd em{font-style:normal;font-family:var(--mono);font-size:.69rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-left:8px;white-space:nowrap}
+@media (max-width:520px){ .card div{grid-template-columns:1fr} }
+
+footer{padding-block:14px 18px;border-top:1px solid var(--line);font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media (prefers-reduced-motion: reduce){ *{animation:none!important;transition:none!important} }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="bar">
+      <a class="mark" href="../" style="color:inherit;text-decoration:none">The Other Side</a>
+      <button class="restart" id="restart" type="button" hidden>Start over</button>
+    </div>
+    <div class="prog"><i id="prog"></i></div>
+    <div class="recap" id="recap"></div>
+  </header>
+  <main id="stage"></main>
+  <footer><span>Prototype · the relationship door</span><span>Nothing you choose is stored</span></footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+var stage=document.getElementById("stage"), prog=document.getElementById("prog"),
+    recap=document.getElementById("recap"), restartBtn=document.getElementById("restart");
+var LETTERS="ABCDEFGHIJ";
+var LEVELS=["","Almost impossible","Unlikely","Plausible","Likely","Almost certainly"];
+
+var M={
+  lose:{s:"They're losing interest.",n:"Losing interest",role:"target",
+        pred:"You start every contact. Replies get shorter. Nothing is offered back.",
+        cond:"I start every contact and nothing comes back"},
+  over:{s:"They're overwhelmed.",n:"Overwhelmed",role:"out",
+        pred:"It is the same with everyone. They offer something back when they can. Small contact continues.",
+        cond:"It's the same with everyone in their life"},
+  prio:{s:"They want this, but don't prioritize it.",n:"Not a priority",role:"target",
+        pred:"They turn up for other people. You get what is left over, and changes come late.",
+        cond:"Other people still get their time"},
+  avoid:{s:"They're avoiding telling me something.",n:"Avoiding something",role:"target",
+        pred:"Fine in a group or by message. It is time alone with you that falls through.",
+        cond:"It's easier for them when other people are there"},
+  mine:{s:"My expectations changed, not their behavior.",n:"My expectations",role:"cause",
+        pred:"Their behavior is what it was two years ago. You are the one reaching more.",
+        cond:"I'm reaching out more than I used to"}
+};
+var IDS=["lose","over","prio","avoid","mine"];
+
+var CHAIN={
+  real:"The change is in them, not in what I expect.",
+  choice:"It's a choice they are making.",
+  us:"It's about the two of us, not about their life.",
+  feel:"What they do shows what they feel.",
+  enough:"I know enough to tell these explanations apart."
+};
+var NEEDS={lose:["real","us","feel","enough"],over:["real","enough"],prio:["real","choice","us","feel","enough"],
+           avoid:["real","choice","us","enough"],mine:["enough"]};
+
+var QS=["q1","q2","q3","q4"];
+var Q={
+  q1:{q:"After a lapse, who makes the next move?",
+      o:[["me","Always me"],["them","Sometimes them"],["dk","I don't know"]],
+      d:{me:{lose:1,over:-1},them:{lose:-1,over:.5,prio:.5}},
+      fact:{me:"you make every next move",them:"they sometimes make the next move"},
+      say:{me:"That is what losing interest predicts, and what being overwhelmed doesn't.",
+           them:"Losing interest doesn't predict that. Someone who is done stops proposing.",
+           dk:"Nothing moves. This is the fact that separates losing interest from being overwhelmed."},
+      unk:"who makes the next move"},
+  q2:{q:"Is it the same with other people in their life?",
+      o:[["all","Yes, with everyone"],["others","No, other people still get their time"],["dk","I don't know"]],
+      d:{all:{over:1,lose:-.5,prio:-1,avoid:-.5},others:{over:-1,prio:1,lose:.5}},
+      fact:{all:"it is the same with everyone in their life",others:"other people still get their time"},
+      say:{all:"Then it isn't specific to you. Every explanation that puts you at the center loses ground.",
+           others:"Then they have time, and it is going elsewhere. Overwhelmed loses ground.",
+           dk:"Nothing moves. This is the fact that separates overwhelmed from not a priority."},
+      unk:"whether it is the same with other people"},
+  q3:{q:"Is it different when other people are around?",
+      o:[["group","Yes, it's easier in a group"],["same","No, it's the same either way"],["dk","I don't know"]],
+      d:{group:{avoid:1,lose:-1},same:{avoid:-1}},
+      fact:{group:"it is easier when other people are there",same:"it is the same alone or in company"},
+      say:{group:"They still come. What falls through is time alone with you. Losing interest doesn't predict that.",
+           same:"Then there is nothing particular about time alone. Avoidance loses ground.",
+           dk:"Nothing moves. This is the fact that would show avoidance."},
+      unk:"whether it is different in company"},
+  q4:{q:"Are you reaching out more than you used to?",
+      o:[["yes","Yes"],["no","No"],["dk","I don't know"]],
+      d:{yes:{mine:1},no:{mine:-1}},
+      fact:{yes:"you are reaching out more than you used to",no:"you are reaching out no more than you used to"},
+      say:{yes:"Then part of the gap is your reach growing, not theirs shrinking.",
+           no:"Then the change is on their side.",
+           dk:"Nothing moves. Without a baseline you can't say who changed."},
+      unk:"whether you are reaching out more than you used to"}
+};
+var COND_MET={lose:["q1","me"],over:["q2","all"],prio:["q2","others"],avoid:["q3","group"],mine:["q4","yes"]};
+
+var S;
+function reset(){ S={know:{},base:{},cur:{},marked:[]}; recap.textContent=""; restartBtn.hidden=true; open(); }
+restartBtn.addEventListener("click",reset);
+
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
+function lvl(v){return LEVELS[Math.max(1,Math.min(5,Math.round(v)))]}
+function pct(v){return (Math.max(1,Math.min(5,v))-1)/4*100}
+function setProg(p){prog.style.width=(p*100)+"%"}
+function show(html){stage.classList.remove("in");stage.innerHTML=html;void stage.offsetWidth;stage.classList.add("in");window.scrollTo(0,0)}
+function setRecap(){var a=[];if(S.whoR)a.push(S.whoR);if(S.whatR)a.push(S.whatR);if(S.countR)a.push(S.countR);recap.textContent=a.join("  ·  ")}
+
+var keyHandler=null;
+document.addEventListener("keydown",function(e){
+  if(e.metaKey||e.ctrlKey||e.altKey)return;
+  if(keyHandler)keyHandler(e);
+});
+
+function head(o){
+  return (o.kicker?'<div class="kicker">'+esc(o.kicker)+'</div>':'')+
+         (o.pre?'<div class="pre">'+o.pre+'</div>':'')+
+         '<h1>'+esc(o.q)+'</h1>'+(o.sub?'<p class="sub">'+esc(o.sub)+'</p>':'');
+}
+function contBtn(label){return '<button class="go" type="button">'+(label||"Continue")+'<span>↵</span></button>'}
+function animateGauge(root){
+  requestAnimationFrame(function(){requestAnimationFrame(function(){
+    root.querySelectorAll(".g-dot[data-to]").forEach(function(d){d.style.left=d.getAttribute("data-to")+"%"});
+  })});
+}
+function addReply(html,next,label){
+  var r=document.createElement("div");r.className="reply";r.innerHTML=html+contBtn(label);
+  stage.appendChild(r);animateGauge(r);
+  var b=r.querySelector(".go");b.addEventListener("click",function(){keyHandler=null;next()});
+  keyHandler=function(e){if(e.key==="Enter"){e.preventDefault();b.click()}};
+  r.scrollIntoView({block:"nearest",behavior:"smooth"});
+}
+
+/* single-choice screen */
+function ask(o){
+  if(o.p!=null)setProg(o.p);
+  var h=head(o)+'<div class="opts">';
+  var k=0;
+  o.options.forEach(function(op,i){
+    var dis=op.off?' disabled':'';
+    var key=op.off?"":LETTERS[k++];
+    h+='<button class="opt" type="button" data-i="'+i+'" data-k="'+key+'" aria-pressed="false"'+dis+'><span class="k">'+key+'</span><span class="t">'+esc(op.l)+(op.note?'<span class="n">'+esc(op.note)+'</span>':'')+'</span></button>';
+  });
+  h+='</div>';
+  show(h);
+  var box=stage.querySelector(".opts"), btns=[].slice.call(box.querySelectorAll(".opt"));
+  function pick(b){
+    if(box.classList.contains("done"))return;
+    var op=o.options[+b.getAttribute("data-i")];
+    b.setAttribute("aria-pressed","true");box.classList.add("done");
+    btns.forEach(function(x){x.disabled=true});
+    keyHandler=null;
+    var rep=o.respond?o.respond(op.v):null;
+    if(rep){addReply(rep,function(){o.next(op.v)})}
+    else setTimeout(function(){o.next(op.v)},220);
+  }
+  btns.forEach(function(b){b.addEventListener("click",function(){pick(b)})});
+  keyHandler=function(e){
+    var key=e.key.toUpperCase();
+    var b=btns.filter(function(x){return x.getAttribute("data-k")===key&&!x.disabled})[0];
+    if(b){e.preventDefault();pick(b)}
+  };
+}
+
+/* ---------- screens ---------- */
+function open(){
+  ask({p:0,q:"You probably have a theory about something you don't fully understand.",sub:"Pick one.",
+    options:[
+      {v:"x",l:"Why someone behaves the way they do",off:1,note:"Not in this prototype"},
+      {v:"rel",l:"Why a relationship changed"},
+      {v:"x",l:"Why something succeeded, failed or caught on",off:1,note:"Not in this prototype"},
+      {v:"x",l:"Why people believe something you don't",off:1,note:"Not in this prototype"},
+      {v:"x",l:"Why you keep making the same mistake",off:1,note:"Not in this prototype"},
+      {v:"x",l:"Something you think everyone else is getting wrong",off:1,note:"Not in this prototype"},
+      {v:"x",l:"A belief you'd be uncomfortable finding out is wrong",off:1,note:"Not in this prototype"}
+    ],
+    next:function(){restartBtn.hidden=false;who()}});
+}
+function who(){
+  ask({p:.04,kicker:"Anchor",q:"Think of one person. Not a type. Who are they to you?",
+    options:[{v:"Friend",l:"A friend"},{v:"Partner",l:"A partner"},{v:"Family",l:"Family"},{v:"Colleague",l:"Someone I work with"},{v:"Drifted",l:"Someone I've drifted from"}],
+    next:function(v){S.whoR=v;setRecap();what()}});
+}
+function what(){
+  ask({p:.08,kicker:"Anchor",q:"What would you point to?",
+    options:[{v:"Cancels plans",l:"They cancel plans"},{v:"Gone quiet",l:"They've gone quiet"},{v:"Says one thing, does another",l:"They say one thing and do another"},{v:"Stopped asking",l:"They stopped asking about my life"}],
+    next:function(v){S.whatR=v;setRecap();count()}});
+}
+function count(){
+  ask({p:.12,kicker:"Anchor",q:"How many times?",
+    options:[{v:"1–2 times",l:"Once or twice"},{v:"3–5 times",l:"Three to five"},{v:"5+ times",l:"More than five"},{v:"Uncounted",l:"I haven't counted"}],
+    respond:function(v){
+      if(v==="1–2 times")return "<p>Two is a thin sample. Remember that when you rate your confidence.</p>";
+      if(v==="Uncounted")return "<p>So you have a conclusion and no count.</p>";
+      return null;},
+    next:function(v){S.countR=v;setRecap();read(true)}});
+}
+function read(withDk){
+  var ops=IDS.map(function(id){return {v:id,l:M[id].s}});
+  if(withDk)ops.push({v:"dk",l:"I don't know."});
+  ask({p:.17,kicker:"Your read",q:withDk?"And your read?":"Pick the one you would bet on.",options:ops,
+    respond:function(v){return v==="dk"?"<p>Then there is nothing to test yet.</p>":null},
+    next:function(v){if(v==="dk"){read(false);return}S.read=v;conf()}});
+}
+function conf(){
+  ask({p:.21,kicker:"Your read",pre:"<strong>"+esc(M[S.read].s)+"</strong>",q:"How sure are you?",
+    options:[{v:5,l:"Almost certainly"},{v:4,l:"Likely"},{v:3,l:"Plausible"}],
+    next:function(v){S.conf=v;S.base[S.read]=v;rate()}});
+}
+function rate(){
+  setProg(.26);
+  var others=IDS.filter(function(id){return id!==S.read});
+  var h=head({kicker:"What else could explain this",q:"Rate the other four.",sub:"From almost impossible to almost certainly."})+
+    '<div class="ends"><span>Impossible</span><span>Certain</span></div><div class="rate">';
+  others.forEach(function(id){
+    h+='<div class="rrow" data-id="'+id+'"><div class="nm">'+esc(M[id].s)+'<span class="lv"></span></div><div class="scale" role="group" aria-label="'+esc(M[id].n)+'">';
+    for(var i=1;i<=5;i++)h+='<button type="button" data-v="'+i+'" aria-pressed="false" aria-label="'+LEVELS[i]+'"></button>';
+    h+='</div></div>';
+  });
+  h+='</div>'+contBtn();
+  show(h);
+  var go=stage.querySelector(".go");go.disabled=true;
+  var got={};
+  stage.querySelectorAll(".rrow").forEach(function(row){
+    var id=row.getAttribute("data-id");
+    row.querySelectorAll(".scale button").forEach(function(b){
+      b.addEventListener("click",function(){
+        row.querySelectorAll(".scale button").forEach(function(x){x.setAttribute("aria-pressed","false")});
+        b.setAttribute("aria-pressed","true");
+        got[id]=+b.getAttribute("data-v");
+        row.querySelector(".lv").textContent=LEVELS[got[id]];
+        go.disabled=Object.keys(got).length<others.length;
+      });
+    });
+  });
+  go.addEventListener("click",function(){
+    keyHandler=null;
+    others.forEach(function(id){S.base[id]=got[id]});
+    IDS.forEach(function(id){S.cur[id]=S.base[id]});
+    story();
+  });
+  keyHandler=function(e){if(e.key==="Enter"&&!go.disabled){e.preventDefault();go.click()}};
+}
+
+function story(){
+  var hi=IDS.filter(function(id){return S.base[id]>=4}), thr="Likely or higher";
+  if(!hi.length){var mx=Math.max.apply(null,IDS.map(function(id){return S.base[id]}));hi=IDS.filter(function(id){return S.base[id]===mx});thr="highest"}
+  var inIt=hi.filter(function(id){return M[id].role!=="out"}).length, n=hi.length;
+  var num=["no","one","two","three","four","five"];
+  var first=thr==="highest"?"You rated "+num[n]+" explanation"+(n>1?"s":"")+" highest.":"You rated "+num[n]+" explanation"+(n>1?"s":"")+" Likely or higher.";
+  var second;
+  if(inIt===n)second=n===1?"You are at the center of it.":"You are at the center of "+(n===2?"both":"all "+num[n])+".";
+  else if(inIt===0)second=n===1?"You don't appear in it.":"You appear in none of them.";
+  else second="You are at the center of "+num[inIt]+".";
+  S.central=inIt>0;
+  var ops=S.central?
+    [{v:"only",l:"It happens only with me"},{v:"after",l:"It started after something between us"},{v:"told",l:"They told me"},{v:"none",l:"Nothing specific. It's my reading."}]:
+    [{v:"all",l:"It's the same with everyone"},{v:"life",l:"It started with something in their life"},{v:"told",l:"They told me"},{v:"none",l:"Nothing specific. It's my reading."}];
+  ask({p:.32,kicker:"Your place in the story",pre:"<strong>"+first+" "+second+"</strong>",
+    q:S.central?"What evidence puts you there?":"What evidence keeps you out of it?",options:ops,
+    respond:function(v){
+      if(v==="only"||v==="all")return "<p>That would be real evidence. We'll come back to whether you know it.</p>";
+      if(v==="after"||v==="life")return "<p>A date is evidence. It can be checked.</p>";
+      if(v==="told")return "<p>Then that part isn't inference.</p>";
+      return "<p>Then your place in this story is an assumption. It may still be right.</p>";},
+    next:function(v){S.storyEv=v;chain()}});
+}
+
+function chain(){
+  setProg(.38);
+  var keys=Object.keys(CHAIN);
+  var h=head({kicker:"Assumptions",pre:"<strong>"+esc(M[S.read].s)+"</strong>",q:"Which of these are you assuming?",sub:"Mark every one that applies."})+'<div class="opts">';
+  keys.forEach(function(k,i){h+='<button class="opt" type="button" data-c="'+k+'" data-k="'+LETTERS[i]+'" aria-pressed="false"><span class="k">'+LETTERS[i]+'</span><span class="t">'+esc(CHAIN[k])+'</span></button>'});
+  h+='</div>'+contBtn();
+  show(h);
+  var btns=[].slice.call(stage.querySelectorAll(".opt")), go=stage.querySelector(".go");
+  btns.forEach(function(b){b.addEventListener("click",function(){b.setAttribute("aria-pressed",b.getAttribute("aria-pressed")==="true"?"false":"true")})});
+  go.addEventListener("click",function(){
+    keyHandler=null;
+    S.marked=btns.filter(function(b){return b.getAttribute("aria-pressed")==="true"}).map(function(b){return b.getAttribute("data-c")});
+    chainBack();
+  });
+  keyHandler=function(e){
+    if(e.key==="Enter"){e.preventDefault();go.click();return}
+    var b=btns.filter(function(x){return x.getAttribute("data-k")===e.key.toUpperCase()})[0];
+    if(b){e.preventDefault();b.click()}
+  };
+}
+function chainBack(){
+  var need=NEEDS[S.read], hit=need.filter(function(k){return S.marked.indexOf(k)>-1}), miss=need.filter(function(k){return S.marked.indexOf(k)<0});
+  var num=["none","one","two","three","four","five"];
+  var pre;
+  if(need.length===1)pre="<strong>Your read needs one of these: that you know enough to tell the explanations apart. "+(miss.length?"You didn't mark it.":"You marked it.")+"</strong>";
+  else if(!miss.length)pre="<strong>Your read needs "+num[need.length]+" of these to be true. You marked all of them.</strong> Nothing your read depends on is hidden from you.";
+  else pre="<strong>Your read needs "+num[need.length]+" of these to be true. You marked "+num[hit.length]+".</strong><br>Unmarked: "+miss.map(function(k){return esc(CHAIN[k].replace(/\.$/,""))}).join("; ")+".";
+  if(need.length===1){S.work="enough";
+    show(head({kicker:"Assumptions",pre:pre,q:"That one carries everything."})+contBtn());setProg(.42);
+    var b=stage.querySelector(".go");b.addEventListener("click",function(){keyHandler=null;findable()});
+    keyHandler=function(e){if(e.key==="Enter"){e.preventDefault();b.click()}};return;}
+  ask({p:.42,kicker:"Assumptions",pre:pre,q:"Which one is doing the most work?",
+    options:need.map(function(k){return {v:k,l:CHAIN[k]}}),
+    next:function(v){S.work=v;findable()}});
+}
+function findable(){
+  ask({p:.46,kicker:"Assumptions",pre:"<strong>"+esc(CHAIN[S.work])+"</strong>",q:"Could you find that out?",
+    options:[{v:"ask",l:"By asking them one question"},{v:"watch",l:"By watching for a few weeks"},{v:"no",l:"It can't be known"}],
+    next:function(v){S.findable=v;if(v==="no"){S.asked="na";
+        ask({p:.5,kicker:"Assumptions",q:"Then something unknowable is doing the most work.",sub:"Your confidence should carry that.",options:[{v:1,l:"Continue"}],next:carry});
+      }else asked()}});
+}
+function asked(){
+  ask({p:.5,kicker:"Assumptions",q:"Have you?",
+    options:[{v:"yes",l:"Yes"},{v:"no",l:"No"},{v:"half",l:"Not directly"}],
+    respond:function(v){
+      if(v==="yes")return "<p>Then it is no longer an assumption. Keep what you found separate from what you concluded.</p>";
+      if(S.findable==="ask")return "<p>The assumption your read leans on most is one question away. You haven't asked it.</p>";
+      return "<p>It would take a few weeks to see. You haven't started looking.</p>";},
+    next:function(v){S.asked=v;carry()}});
+}
+
+function carry(){
+  ask({p:.55,kicker:"Evidence",q:"What is carrying your confidence?",
+    options:[{v:"count",l:"The number of times"},{v:"how",l:"How they do it"},{v:"me",l:"That I'm always the one who reaches out"},{v:"feel",l:"A feeling"}],
+    respond:function(v){
+      if(v==="count")return "<p>The count is predicted by all four explanations about them. It doesn't distinguish any of them.</p>";
+      if(v==="how")return "<p>That can distinguish. A late excuse and a worn-out apology predict different things. It is usable evidence, if you can say which you saw.</p>";
+      if(v==="me")return "<p>This one distinguishes. Losing interest predicts it. Being overwhelmed doesn't.</p>";
+      return "<p>A feeling is a summary of evidence you haven't itemized. It may be right. It can't be checked until you unpack it.</p>";},
+    next:function(v){S.carry=v;predict()}});
+}
+
+function predict(){
+  var h='<dl class="preds">';
+  IDS.forEach(function(id){h+='<div'+(id===S.read?' class="mine"':'')+'><dt>'+esc(M[id].n)+'</dt><dd>'+esc(M[id].pred)+'</dd></div>'});
+  h+='</dl>';
+  var ops=IDS.filter(function(id){return id!==S.read}).map(function(id){return {v:id,l:M[id].cond}});
+  ops.push({v:"none",l:"None of these would move me"});
+  ask({p:.6,kicker:"What each explanation predicts",pre:"If each were true, this is what we would expect to see."+h,
+    q:"Which of these, if you saw it, would move you off your read?",options:ops,
+    respond:function(v){return v==="none"?"<p>Noted. Then nothing on this list can test your read.</p>":null},
+    next:function(v){S.cond=v;know(0)}});
+}
+
+function gauge(prev){
+  var order=[S.read].concat(IDS.filter(function(id){return id!==S.read}));
+  var h='<div class="gauge" aria-label="Current ratings">';
+  order.forEach(function(id){
+    var moved=Math.abs(S.cur[id]-prev[id])>.01;
+    h+='<div class="g-row'+(id===S.read?' read':'')+'"><div class="g-name">'+(id===S.read?'<small>Your read</small>':'')+'<b>'+esc(M[id].n)+'</b></div><div class="g-track">';
+    for(var i=0;i<5;i++)h+='<s style="left:'+(i*25)+'%"></s>';
+    h+='<i class="g-ghost" style="left:'+pct(S.base[id])+'%"></i><i class="g-dot" style="left:'+pct(prev[id])+'%" data-to="'+pct(S.cur[id])+'"></i></div><div class="g-val'+(moved?' moved':'')+'">'+lvl(S.cur[id])+'</div></div>';
+  });
+  return h+'</div>';
+}
+function know(i){
+  if(i>=QS.length){due();return}
+  var key=QS[i], q=Q[key];
+  ask({p:.64+i*.05,kicker:"Do you know that?",q:q.q,options:q.o.map(function(o){return {v:o[0],l:o[1]}}),
+    respond:function(v){
+      S.know[key]=v;
+      var prev={};IDS.forEach(function(id){prev[id]=S.cur[id]});
+      var d=q.d[v]||{};
+      Object.keys(d).forEach(function(id){S.cur[id]=Math.max(1,Math.min(5,S.cur[id]+d[id]))});
+      var line=q.say[v], extra="";
+      if(v==="dk"&&S.conf>=4)extra+="<p class=\"small\">You rated your read "+LEVELS[S.conf]+" without it.</p>";
+      if(key==="q2"){
+        if(S.storyEv==="only"&&v!=="others")extra+="<p class=\"small\">Earlier you said it happens only with you. That was holding your place in the story.</p>";
+        if(S.storyEv==="all"&&v!=="all")extra+="<p class=\"small\">Earlier you said it's the same with everyone. That was keeping you out of the story.</p>";
+      }
+      return "<p>"+line+"</p>"+extra+gauge(prev);},
+    next:function(){know(i+1)}});
+}
+
+function condState(){
+  if(!S.cond||S.cond==="none")return "none";
+  var c=COND_MET[S.cond], a=S.know[c[0]];
+  return a===c[1]?"met":(a==="dk"?"unknown":"unmet");
+}
+function due(){
+  if(condState()!=="met"){foundation();return}
+  ask({p:.85,kicker:"Your condition",pre:"You said this would move you off your read:<br><strong>"+esc(M[S.cond].cond)+".</strong><br>By your own account, it's true.",
+    q:"Does it?",options:[{v:"yes",l:"Yes"},{v:"no",l:"No"},{v:"less",l:"It counts for less than I said"}],
+    next:function(v){S.due=v;foundation()}});
+}
+
+function foundation(){
+  ask({p:.88,kicker:"The strongest case",q:"Build the strongest case that this relationship matters to them as much as it ever did.",sub:"Choose its foundation. Only pick what is true.",
+    options:[{v:"say",l:"They keep saying they want to see me, and they don't have to."},
+             {v:"together",l:"When we are together, nothing is different."},
+             {v:"everyone",l:"They've been like this with everyone lately."},
+             {v:"counted",l:"They have shown up when it counted."},
+             {v:"none",l:"I can't build it. Nothing I know supports it."}],
+    respond:function(v){return v==="none"?"<p>Then nothing you know opposes your read. That is a result.</p>":null},
+    next:function(v){S.found=v;if(v==="none")findings();else defend()}});
+}
+function defend(){
+  ask({p:.91,kicker:"The strongest case",pre:"Your original read answers it:<br><strong>“"+esc(M[S.read].s)+" Words are cheap. Look at what they do.”</strong>",
+    q:"Defend the case. Which response holds?",
+    options:[{v:"a",l:"I've been counting the misses, not the times they came through."},
+             {v:"b",l:"People who are done stop saying they want to. They haven't."},
+             {v:"c",l:"How someone acts under strain says little about what they feel."},
+             {v:"none",l:"None of them holds. My read stands."}],
+    next:function(v){S.defend=v;findings()}});
+}
+
+function bestFact(id,sign){
+  var best=null,bv=0;
+  QS.forEach(function(k){var a=S.know[k];if(!a||a==="dk")return;var d=(Q[k].d[a]||{})[id]||0;if(d*sign>bv){bv=d*sign;best=Q[k].fact[a]}});
+  return best;
+}
+function findings(){
+  setProg(.95);
+  var ids=IDS.slice().sort(function(a,b){return S.cur[b]-S.cur[a]});
+  var top=ids[0], second=ids[1], margin=S.cur[top]-S.cur[second];
+  var dks=QS.filter(function(k){return S.know[k]==="dk"});
+  var kind=(dks.length>=3||margin<.5)?"open":(top===S.read?"held":"moved");
+  S.kind=kind;
+  var h1,lines=[],now,factLabel,fact;
+  if(kind==="held"){
+    h1="Your read held.";
+    fact=bestFact(S.read,1);factLabel="What it rests on";
+    lines.push(fact?"That evidence distinguishes. Your confidence is earned.":"Nothing you told me tested it. It stands unopposed, which is not the same as confirmed.");
+    now=esc(M[S.read].s)+"<em>"+lvl(S.cur[S.read])+"</em>";
+  }else if(kind==="moved"){
+    h1="By your own answers, your read is no longer the strongest explanation.";
+    fact=bestFact(top,1)||bestFact(S.read,-1);factLabel="What moved it";
+    lines.push(fact?"That fact was yours. You hadn't used it.":"You rated another explanation above your own from the start.");
+    if(top!=="mine")lines.push("Something has changed between you. That part stands. Why it changed is what moved.");
+    now=esc(M[top].s)+"<em>"+lvl(S.cur[top])+"</em>";
+  }else{
+    h1="You don't have enough to know yet.";
+    factLabel="What you established";fact=bestFact(top,1);
+    if(dks.length>=3)lines.push("You answered “I don't know” to "+(dks.length===4?"all four":"three of the four")+" facts that separate these explanations.");
+    else lines.push("“"+M[top].n+"” and “"+M[second].n+"” fit what you know equally well.");
+    now="Not settled.<em>"+esc(M[top].n)+" / "+esc(M[second].n)+"</em>";
+  }
+  var caseModel={say:"prio",together:"over",everyone:"over",counted:"prio"}[S.found];
+  if(caseModel&&caseModel!==S.read&&S.base[caseModel]<=2&&S.defend!=="none")
+    lines.push("The case you built and defended is “"+M[caseModel].n+".” You rated it "+LEVELS[S.base[caseModel]]+".");
+  if(condState()==="unknown")lines.push("You named what would move you. You don't know whether it is true.");
+  if(S.due==="no"||S.due==="less")lines.push("Your condition was met. You "+(S.due==="no"?"did not move":"discounted it")+". Recorded without comment.");
+
+  var assume=esc(CHAIN[S.work]);
+  if(S.asked==="no"||S.asked==="half")assume+="<em>"+(S.findable==="ask"?"One question away, unasked":"Unobserved")+"</em>";
+  else if(S.asked==="na")assume+="<em>Unknowable</em>";
+  var unk=dks.length?cap(dks.map(function(k){return Q[k].unk}).join("; "))+".":"Nothing on this list. You knew every answer.";
+
+  var h='<div class="kicker">What the session found</div><h1>'+esc(h1)+'</h1>'+
+    lines.map(function(l){return '<p class="sub">'+esc(l)+'</p>'}).join("")+
+    '<dl class="card">'+
+    '<div><dt>At the start</dt><dd>'+esc(M[S.read].s)+'<em>'+LEVELS[S.conf]+'</em></dd></div>'+
+    '<div><dt>Now</dt><dd>'+now+'</dd></div>'+
+    '<div><dt>'+factLabel+'</dt><dd>'+(fact?esc(cap(fact))+".":"Nothing yet.")+'</dd></div>'+
+    '<div><dt>Assumption carrying it</dt><dd>'+assume+'</dd></div>'+
+    '<div><dt>Not yet known</dt><dd>'+esc(unk)+'</dd></div>'+
+    '</dl>'+contBtn("Seal a forecast");
+  show(h);
+  var b=stage.querySelector(".go");b.addEventListener("click",function(){keyHandler=null;forecast()});
+  keyHandler=function(e){if(e.key==="Enter"){e.preventDefault();b.click()}};
+}
+
+function forecast(){
+  ask({p:.97,kicker:"Forecast",pre:"Each explanation predicts a different answer.",q:"The next time: who makes the move, and does it happen?",
+    options:[{v:"I make the move, and it happens",l:"I do, and it happens"},{v:"I make the move, and it falls through",l:"I do, and it falls through"},{v:"They make the move",l:"They do"},{v:"Nobody makes the move",l:"Nobody does"}],
+    next:function(v){S.forecast=v;view()}});
+}
+function view(){
+  ask({p:.99,kicker:"One last question",q:"Did anything here change your view?",
+    options:[{v:"no",l:"No"},{v:"slight",l:"Slightly"},{v:"sig",l:"Significantly"},{v:"wrong",l:"I was wrong"},{v:"expl",l:"My conclusion stayed the same, but my explanation changed"}],
+    next:function(v){S.view=v;end()}});
+}
+function end(){
+  setProg(1);
+  var mismatch="";
+  if(S.view==="no"&&S.kind==="moved")mismatch='<p class="sub">You say nothing changed. Your ratings did. Both are recorded.</p>';
+  if((S.view==="sig"||S.view==="wrong")&&S.kind==="held")mismatch='<p class="sub">You say your view changed. Your ratings held. Both are recorded.</p>';
+  show('<div class="kicker">Sealed</div><h1>'+esc(S.forecast)+'.</h1>'+
+    '<p class="sub">In the full product this comes back once, when it happens, and asks what you saw.</p>'+mismatch+
+    '<button class="go" type="button">Start again<span>↵</span></button>');
+  var b=stage.querySelector(".go");b.addEventListener("click",reset);
+  keyHandler=function(e){if(e.key==="Enter"){e.preventDefault();b.click()}};
+}
+
+reset();
+})();
+</script>
+</body>
+</html>
