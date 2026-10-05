@@ -229,7 +229,7 @@ var Q={
 var COND_MET={lose:["q1","me"],over:["q2","all"],prio:["q2","others"],avoid:["q3","group"],mine:["q4","yes"]};
 
 var S;
-function reset(){ S={know:{},base:{},after:{},marked:[],notes:[]}; recap.textContent=""; restartBtn.hidden=true; open(); }
+function reset(){ S={know:{},base:{},after:{},marked:[],notes:[]}; recap.textContent=""; restartBtn.hidden=true; who(); }
 restartBtn.addEventListener("click",reset);
 
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
@@ -333,25 +333,12 @@ function rateScreen(o){
 }
 
 /* ---------- screens ---------- */
-function open(){
-  ask({p:0,q:"You probably have a theory about something you don't fully understand.",sub:"Pick one.",
-    options:[
-      {v:"x",l:"Why someone behaves the way they do",off:1,note:"Not open yet"},
-      {v:"rel",l:"Why a relationship changed"},
-      {v:"x",l:"Why something succeeded, failed or caught on",off:1,note:"Not open yet"},
-      {v:"x",l:"Why people believe something you don't",off:1,note:"Not open yet"},
-      {v:"x",l:"Why you keep making the same mistake",off:1,note:"Not open yet"},
-      {v:"x",l:"Something you think everyone else is getting wrong",off:1,note:"Not open yet"},
-      {v:"x",l:"A belief you'd be uncomfortable finding out is wrong",off:1,note:"Not open yet"}
-    ],
-    next:function(){restartBtn.hidden=false;who()}});
-}
 function who(){
-  ask({p:.03,kicker:"Anchor",q:"Think of one person. Not a type. Who are they to you?",
+  ask({p:0,kicker:"Why a relationship changed",q:"Think of one person. Not a type. Who are they to you?",
     sub:"That it happened is not in question here. Why it happened is.",
     options:[{v:"Friend",l:"A friend"},{v:"Partner",l:"A partner"},{v:"Family",l:"Family"},{v:"Colleague",l:"Someone I work with"},{v:"Drifted",l:"Someone I've drifted from"}],
     foot:'This tests a read about distance. If you are afraid of this person, or of how they would take a question, it is the wrong instrument. <a href="https://findahelpline.com" target="_blank" rel="noopener">Find someone to talk to</a>.',
-    next:function(v){S.whoR=v;setRecap();what()}});
+    next:function(v){S.whoR=v;restartBtn.hidden=false;setRecap();what()}});
 }
 function what(){
   ask({p:.06,kicker:"Anchor",q:"What would you point to?",

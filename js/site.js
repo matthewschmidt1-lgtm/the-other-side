@@ -74,6 +74,9 @@
       headEl.textContent = d.head;
       rows.forEach(function (r, i) { r.children[0].textContent = d.rows[i][0]; r.children[1].textContent = d.rows[i][1]; });
       live.textContent = "You chose: " + text + ". " + d.obs + " " + d.head;
+      document.getElementById("cta-note").textContent = b.getAttribute("data-c") === "rel"
+        ? "This is the direction you chose."
+        : "The direction you chose isn't open yet. This one is.";
       turn.scrollIntoView({ behavior: reduce.matches ? "auto" : "smooth", block: "start" });
     });
   });
