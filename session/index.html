@@ -216,7 +216,7 @@ var Q={
 var COND_MET={lose:["q1","me"],over:["q2","all"],prio:["q2","others"],avoid:["q3","group"],mine:["q4","yes"]};
 
 var S;
-function reset(){ S={know:{},base:{},cur:{},marked:[]}; recap.textContent=""; restartBtn.hidden=true; open(); }
+function reset(){ S={know:{},base:{},cur:{},marked:[],n:{}}; recap.textContent=""; restartBtn.hidden=true; open(); }
 restartBtn.addEventListener("click",reset);
 
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
@@ -481,7 +481,13 @@ function know(i){
       S.know[key]=v;
       var prev={};IDS.forEach(function(id){prev[id]=S.cur[id]});
       var d=q.d[v]||{};
-      Object.keys(d).forEach(function(id){S.cur[id]=Math.max(1,Math.min(5,S.cur[id]+d[id]))});
+      /* a rating can move one level on one or two answers, two levels only on three or more */
+      Object.keys(d).forEach(function(id){
+        S.n[id]=(S.n[id]||0)+1;
+        var lim=S.n[id]>=3?2:1, v2=S.cur[id]+d[id];
+        v2=Math.max(S.base[id]-lim,Math.min(S.base[id]+lim,v2));
+        S.cur[id]=Math.max(1,Math.min(5,v2));
+      });
       var line=q.say[v], extra="";
       if(v==="dk"&&S.conf>=4)extra+="<p class=\"small\">You rated your read "+LEVELS[S.conf]+" without it.</p>";
       if(key==="q2"){
@@ -511,8 +517,16 @@ function foundation(){
              {v:"everyone",l:"They've been like this with everyone lately."},
              {v:"counted",l:"They have shown up when it counted."},
              {v:"none",l:"I can't build it. Nothing I know supports it."}],
-    respond:function(v){return v==="none"?"<p>Then nothing you know opposes your read. That is a result.</p>":null},
-    next:function(v){S.found=v;if(v==="none")findings();else defend()}});
+    respond:function(v){
+      if(v==="none")return "<p>Then nothing you know opposes your read. That is a result.</p>";
+      if(v==="everyone"&&S.know.q2==="others")return "<p>A few answers ago you said other people still get their time. Both can't be true, so the case can't stand on this.</p>";
+      if(v==="everyone"&&S.know.q2==="dk")return "<p>A few answers ago you didn't know whether it was the same with other people. The case now rests on it.</p>";
+      return null;},
+    next:function(v){
+      S.found=v;
+      if(v==="everyone"&&S.know.q2==="others"){S.found="conflict";findings();return}
+      if(v==="everyone"&&S.know.q2==="dk")S.shaky=true;
+      if(v==="none")findings();else defend()}});
 }
 function defend(){
   ask({p:.91,kicker:"The strongest case",pre:"Your original read answers it:<br><strong>“"+esc(M[S.read].s)+" Words are cheap. Look at what they do.”</strong>",
@@ -556,7 +570,9 @@ function findings(){
     now="Not settled.<em>"+esc(M[top].n)+" / "+esc(M[second].n)+"</em>";
   }
   var caseModel={say:"prio",together:"over",everyone:"over",counted:"prio"}[S.found];
-  if(caseModel&&caseModel!==S.read&&S.base[caseModel]<=2&&S.defend!=="none")
+  if(S.found==="conflict")lines.push("You built the opposing case on something you had already said was not true.");
+  if(S.shaky)lines.push("The case you built rests on a fact you said you didn't know.");
+  if(caseModel&&!S.shaky&&caseModel!==S.read&&S.base[caseModel]<=2&&S.defend!=="none")
     lines.push("The case you built and defended is “"+M[caseModel].n+".” You rated it "+LEVELS[S.base[caseModel]]+".");
   if(condState()==="unknown")lines.push("You named what would move you. You don't know whether it is true.");
   if(S.due==="no"||S.due==="less")lines.push("Your condition was met. You "+(S.due==="no"?"did not move":"discounted it")+". Recorded without comment.");
